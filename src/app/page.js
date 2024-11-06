@@ -1,99 +1,166 @@
-import Image from "next/image";
+"use client";
+import React, { useState, useEffect } from 'react';
+import { FaUnlock, FaLock, FaCrown, FaBell, FaTasks, FaChartLine, FaCog } from 'react-icons/fa';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-export default function Home() {
+export default function Dashboard() {
+  const [meritPoints, setMeritPoints] = useState(295);
+  const [quote, setQuote] = useState("ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก");
+  const [userStatus, setUserStatus] = useState("Beginner Merit Seeker");
+  const [activityHistory, setActivityHistory] = useState([
+    { id: 1, description: "สะสมบุญใกล้บ้าน", points: 50, image: "https://static.thairath.co.th/media/dFQROr7oWzulq5FZYjXiaKmVO3vcxON9xLf2HYojmsfQAfq5rjDmmiJhYZiOmWuToDF.jpg" },
+    { id: 2, description: "ฟังธรรมประจำวัน", points: 30, image: "https://images.unsplash.com/photo-1530847887473-36dbaf586122?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ" },
+    { id: 3, description: "งานวัดที่ใกล้มาถึง", points: 70, image: "https://cdn.chiangmainews.co.th/wp-content/uploads/2019/01/06133012/2109052.jpg" },
+  ]);
+  const [rewards, setRewards] = useState([
+    { id: 1, name: "สิทธิพิเศษ 1", status: "ปลดล็อคแล้ว" },
+    { id: 2, name: "สิทธิพิเศษ 2", status: "ปลดล็อคแล้ว" },
+    { id: 3, name: "สิทธิพิเศษ 3", status: "ยังไม่ปลดล็อค" },
+  ]);
+  const [notifications, setNotifications] = useState([
+    { id: 1, message: "คุณมีภารกิจพิเศษที่ยังไม่เสร็จ!" }
+  ]);
+
+  const statisticsData = [
+    { name: 'ทำบุญครั้งที่ 1', times: activityHistory.length }
+  ];
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-white text-gray-800 font-['Anuphan'] flex flex-col items-center">
+      {/* Smooth Scroll */}
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Header */}
+      <header className="w-full p-5 bg-[#1478D2] text-white text-center">
+        <h1>สวัสดี คุณเคน</h1>
+        <p>บุญรักษา</p>
+      </header>
+
+      {/* Profile Section */}
+      <section id="profile" className="w-full p-5 flex items-center justify-between bg-gray-100">
+        <div className="flex items-center gap-4">
+          <img src="https://cdni-hw.ch7.com/dm/sz-md/i/images/2024/01/04/6596635ba58c56.73311328.jpg" alt="Profile" className="w-12 h-12 rounded-full" />
+          <div>
+            <p className="font-bold">ชื่อผู้ใช้: คุณเคน</p>
+            <p className="text-sm">{userStatus}</p>
+          </div>
         </div>
+        <button className="text-blue-500 flex items-center gap-2">
+          <FaCog className="text-lg" /> การตั้งค่า
+        </button>
+      </section>
+
+      {/* Main Content */}
+      <main className="flex-grow w-full p-5">
+        {/* Overview Section */}
+        <section id="overview" className="text-center mb-5">
+          <div className="bg-blue-200 text-blue-900 p-5 rounded-full w-32 h-32 mx-auto flex items-center justify-center text-3xl">
+            {meritPoints} <span className="text-sm">MERIT</span>
+          </div>
+          <h2 className="mt-3 text-lg">{userStatus}</h2>
+          <p className="text-sm mt-2 text-gray-700">{quote}</p>
+        </section>
+
+        {/* Statistics Section */}
+        <section id="statistics" className="w-full mb-5">
+          <h2 className="text-lg font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <FaChartLine className="text-blue-500" /> ความก้าวหน้าในการสะสมแต้มบุญ
+          </h2>
+          <div className="bg-gray-200 rounded-full h-4 mb-2">
+            <div className="bg-[#1478D2] h-4 rounded-full" style={{ width: `${(meritPoints / 1000) * 100}%` }}></div>
+          </div>
+          <p className="text-center text-sm text-gray-600">{((meritPoints / 1000) * 100).toFixed(0)}% ของเป้าหมาย 1000 แต้ม</p>
+          {/* Simple Bar Chart */}
+          <div className="bg-[#F2F4F7] p-5 rounded-lg mt-5 shadow-md">
+            <h3 className="text-lg font-semibold text-[#0D2745] mb-3 text-center">สถิติการสะสมบุญ</h3>
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={statisticsData} barCategoryGap="30%">
+                <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fill: "#555" }} />
+                <YAxis tickLine={false} axisLine={false} tick={{ fill: "#555" }} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#FFFFFF', border: '1px solid #DDDDDD', borderRadius: '5px' }} 
+                  itemStyle={{ color: '#0D2745' }} 
+                />
+                <Bar dataKey="times" fill="#1478D2" radius={[10, 10, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+            <p className="text-center text-2xl font-medium text-[#0D2745] mt-4">รวม: {activityHistory.length} ครั้ง</p>
+          </div>
+        </section>
+
+        {/* Notifications Section */}
+        <section id="notifications" className="w-full mt-5 mb-5">
+          <h2 className="text-lg font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <FaBell className="text-red-500" /> การแจ้งเตือน
+          </h2>
+          <div className="flex flex-col gap-3">
+            {notifications.map((notification) => (
+              <div key={notification.id} className="p-4 bg-red-100 rounded-lg flex items-center gap-2">
+                <span role="img" aria-label="alert" className="text-xl">⚠️</span>
+                <p>{notification.message}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Activities Section */}
+        <section id="activities" className="w-full mt-5 mb-5">
+          <h2 className="text-lg font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <FaTasks className="text-blue-500" /> รายการกิจกรรมสะสมบุญ
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {activityHistory.map((activity) => (
+              <div key={activity.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+                <img src={activity.image} alt={activity.description} className="w-full h-32 object-cover" />
+                <div className="p-4 flex flex-col items-center">
+                  <p className="text-center font-medium">{activity.description}</p>
+                  <p className="text-green-600 font-bold mt-2">+{activity.points} MERIT</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Rewards Section */}
+        <section id="rewards" className="w-full mt-5">
+          <h2 className="text-lg font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <FaCrown className="text-yellow-500" /> รางวัลและสิทธิพิเศษ
+          </h2>
+          <div className="flex flex-wrap gap-3 justify-center">
+            {rewards.map((reward) => (
+              <div key={reward.id} className={`p-4 rounded-lg text-center flex flex-col items-center ${reward.status === "ปลดล็อคแล้ว" ? "bg-green-100" : "bg-red-100"}`}>
+                {reward.status === "ปลดล็อคแล้ว" ? <FaUnlock className="text-green-600 mb-2 text-xl" /> : <FaLock className="text-red-600 mb-2 text-xl" />}
+                <p>{reward.name}</p>
+                <p className="text-sm">{reward.status}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+
+      {/* Footer */}
+      <footer className="w-full bg-[#0D2745] text-white p-4 flex justify-around">
+        <a href="#overview" aria-label="หน้าแรก" className="text-center">
+          🏠 <span className="text-sm">หน้าแรก</span>
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
+        <a href="#activities" aria-label="กิจกรรม" className="text-center">
+          🎯 <span className="text-sm">กิจกรรม</span>
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
+        <a href="#rewards" aria-label="รางวัล" className="text-center">
+          🏆 <span className="text-sm">รางวัล</span>
+        </a>
+        <a href="#notifications" aria-label="การแจ้งเตือน" className="text-center">
+          🔔 <span className="text-sm">แจ้งเตือน</span>
+        </a>
+        <a href="#profile" aria-label="โปรไฟล์" className="text-center">
+          👤 <span className="text-sm">โปรไฟล์</span>
+        </a>
+        <a href="#statistics" aria-label="สถิติ" className="text-center">
+          📊 <span className="text-sm">สถิติ</span>
         </a>
       </footer>
     </div>

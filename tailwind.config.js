@@ -8,8 +8,22 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // Define primary and secondary colors
+        primary: "#1478D2",  // Medium blue
+        secondary: "#0D2745", // Dark blue (navy)
+        accentYellow: "#FFD700", // Golden yellow
+        accentOrange: "#FF965A", // Orange
+        // // Link to CSS variables if you want to use dynamic theming
+        // background: "var(--background)",
+        // foreground: "var(--foreground)",
+      },
+      fontFamily: {
+        // Define custom fonts
+        anuphan: ["var(--font-anuphan)", "sans-serif"],
+        supremeBold: ["var(--font-supreme-bold)", "sans-serif"],
+        supremeExtrabold: ["var(--font-supreme-extrabold)", "sans-serif"],
+        supremeMedium: ["var(--font-supreme-medium)", "sans-serif"],
+        supremeRegular: ["var(--font-supreme-regular)", "sans-serif"],
       },
     },
   },

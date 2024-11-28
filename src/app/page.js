@@ -40,19 +40,28 @@ export default function Dashboard() {
         <p>บุญรักษา</p>
       </header>
 
-      {/* Profile Section */}
-      <section id="profile" className="w-full p-5 flex items-center justify-between bg-gray-100 bg-opacity-90">
+     {/* Profile Section */}
+     <section
+        id="profile"
+        className="w-full p-2 flex items-center justify-between bg-[#F2F4F7]  mt-2 shadow-lg"
+      >
         <div className="flex items-center gap-4">
-          <img src="https://cdni-hw.ch7.com/dm/sz-md/i/images/2024/01/04/6596635ba58c56.73311328.jpg" alt="Profile" className="w-12 h-12 rounded-full" />
+          <img
+            src="/icons/yoga-pose-with-lotus-background.png"
+            alt="Profile"
+            className="w-16 h-16 rounded-full border-4 border-[#0D2745]"
+          />
           <div>
-            <p className="font-bold text-secondary">ชื่อผู้ใช้: คุณเคน</p>
-            <p className="text-sm text-secondary">{userStatus}</p>
+            <p className="font-bold text-[#0D2745]">ชื่อผู้ใช้: คุณเคน</p>
+            <p className="text-sm text-[#0D2745]">{userStatus}</p>
           </div>
         </div>
-        <button className="text-blue-500 flex items-center gap-2">
-          <FaCog className="text-lg" /> การตั้งค่า
+        <button className="text-black font-bold flex items-center gap-2 hover:text-[#0D2745] transition-colors">
+          <FaCog className="text-lg text-black" /> การตั้งค่า
         </button>
       </section>
+
+
 
       {/* Main Content */}
       <main className="flex-grow w-full p-5">
@@ -143,24 +152,48 @@ export default function Dashboard() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-[#0D2745] text-white p-2 flex justify-around md:justify-between fixed bottom-0 ">
-        <a href="#overview" aria-label="หน้าแรก" className="text-center flex flex-col items-center">
-          🏠 <span className="text-xs md:text-sm">หน้าแรก</span>
+      <footer className="w-full bg-white text-black p-2 flex justify-around md:justify-between fixed bottom-0">
+        <a
+          href="#overview"
+          aria-label="หน้าแรก"
+          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
+        >
+          <img src="/icons/buddhist-yoga-pose.png" alt="Home Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">หน้าแรก</span>
         </a>
-        <a href="#activities" aria-label="กิจกรรม" className="text-center flex flex-col items-center">
-          🎯 <span className="text-xs md:text-sm">กิจกรรม</span>
+        <a
+          href="#activities"
+          aria-label="กิจกรรม"
+          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
+        >
+          <img src="/icons/buddhist-lotus-flower.png" alt="Activities Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">กิจกรรม</span>
         </a>
-        <a href="#rewards" aria-label="รางวัล" className="text-center flex flex-col items-center">
-          🏆 <span className="text-xs md:text-sm">รางวัล</span>
+        <a
+          href="#rewards"
+          aria-label="รางวัล"
+          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
+        >
+          <img src="/icons/buddha-statue.png" alt="Rewards Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">รางวัล</span>
         </a>
-        <a href="#notifications" aria-label="การแจ้งเตือน" className="text-center flex flex-col items-center">
-          🔔 <span className="text-xs md:text-sm">แจ้งเตือน</span>
+        <a
+          href="#notifications"
+          aria-label="การแจ้งเตือน"
+          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
+        >
+          <img src="/icons/hand-sign-buddhism.png" alt="Notifications Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">แจ้งเตือน</span>
         </a>
-        <a href="#profile" aria-label="โปรไฟล์" className="text-center flex flex-col items-center">
-          👤 <span className="text-xs md:text-sm">โปรไฟล์</span>
+        <a
+          href="#profile"
+          aria-label="โปรไฟล์"
+          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
+        >
+          <img src="/icons/two-tea-leaves.png" alt="Profile Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">โปรไฟล์</span>
         </a>
-        <a href="#statistics" aria-label="สถิติ" className="text-center flex flex-col items-center">
-          📊 <span className="text-xs md:text-sm">สถิติ</span>
+        <a
+          href="#statistics"
+          aria-label="สถิติ"
+          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
+        >
+          <img src="/icons/three-flowers-.png" alt="Statistics Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">สถิติ</span>
         </a>
       </footer>
     </div>

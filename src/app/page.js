@@ -1,201 +1,364 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { FaUnlock, FaLock, FaCrown, FaBell, FaTasks, FaChartLine, FaCog } from 'react-icons/fa';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+import React, { useState } from "react";
+import { Dialog } from "@headlessui/react";
+import {
+  FaUnlock,
+  FaLock,
+  FaCrown,
+  FaBell,
+  FaTimes,
+  FaChartLine,
+  FaUserCircle,
+  FaEdit,
+  FaUser,
+  FaSave,
+  FaTimesCircle 
+} from "react-icons/fa";
+import { GiBuddha, GiLotus, GiTempleGate } from "react-icons/gi";
+import { MdSelfImprovement, MdEventNote } from "react-icons/md";
 
 export default function Dashboard() {
-  const [meritPoints, setMeritPoints] = useState(295);
-  const [quote, setQuote] = useState("ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก");
-  const [userStatus, setUserStatus] = useState("Beginner Merit Seeker");
-  const [activityHistory, setActivityHistory] = useState([
-    { id: 1, description: "สะสมบุญใกล้บ้าน", points: 50, image: "https://static.thairath.co.th/media/dFQROr7oWzulq5FZYjXiaKmVO3vcxON9xLf2HYojmsfQAfq5rjDmmiJhYZiOmWuToDF.jpg" },
-    { id: 2, description: "ฟังธรรมประจำวัน", points: 30, image: "https://images.unsplash.com/photo-1530847887473-36dbaf586122?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjExNzczfQ" },
-    { id: 3, description: "งานวัดที่ใกล้มาถึง", points: 70, image: "https://cdn.chiangmainews.co.th/wp-content/uploads/2019/01/06133012/2109052.jpg" },
-  ]);
-  const [rewards, setRewards] = useState([
+  const [isProfileOpen, setProfileOpen] = useState(false);
+  const [isNotificationOpen, setNotificationOpen] = useState(false);
+  const [isEditProfileOpen, setEditProfileOpen] = useState(false);
+  const [isChangeAvatarOpen, setChangeAvatarOpen] = useState(false);
+  const [userName, setUserName] = useState("คุณเคน");
+  const [userStatus, setUserStatus] = useState("ผู้สะสมแต้มเริ่มต้น");
+  const [avatar, setAvatar] = useState("https://i.pravatar.cc/150");
+
+  const meritPoints = 295;
+  const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
+
+  const activities = [
+    {
+      id: 1,
+      description: "สะสมบุญใกล้บ้าน",
+      points: 50,
+      image:
+        "https://static.thairath.co.th/media/dFQROr7oWzulq5FZYjXiaKmVO3vcxON9xLf2HYojmsfQAfq5rjDmmiJhYZiOmWuToDF.jpg",
+    },
+    {
+      id: 2,
+      description: "ฟังธรรมประจำวัน",
+      points: 30,
+      image: "https://images.unsplash.com/photo-1530847887473-36dbaf586122?crop=entropy&w=1080",
+    },
+    {
+      id: 3,
+      description: "งานวัดที่ใกล้มาถึง",
+      points: 70,
+      image: "https://cdn.chiangmainews.co.th/wp-content/uploads/2019/01/06133012/2109052.jpg",
+    },
+  ];
+
+  const rewards = [
     { id: 1, name: "สิทธิพิเศษ 1", status: "ปลดล็อคแล้ว" },
     { id: 2, name: "สิทธิพิเศษ 2", status: "ปลดล็อคแล้ว" },
     { id: 3, name: "สิทธิพิเศษ 3", status: "ยังไม่ปลดล็อค" },
-  ]);
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: "คุณมีภารกิจพิเศษที่ยังไม่เสร็จ!" }
-  ]);
-
-  const statisticsData = [
-    { name: 'ทำบุญครั้งที่ 1', times: activityHistory.length }
   ];
-
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      icon: <GiLotus className="text-green-900 text-2xl" />, 
+      title: "คุณมีภารกิจพิเศษที่ยังไม่เสร็จ!",
+      time: "3 ชั่วโมงที่แล้ว",
+    },
+    {
+      id: 2,
+      icon: <MdSelfImprovement className="text-blue-500 text-2xl" />, 
+      title: "กิจกรรม: ฟังธรรมประจำวันเสร็จสมบูรณ์",
+      time: "เมื่อวานนี้",
+    },
+    {
+      id: 3,
+      icon: <FaCrown className="text-orange-500 text-2xl" />, 
+      title: "ขอเชิญร่วมกิจกรรมทำบุญวันพระที่วัดใกล้บ้าน",
+      time: "2 วันที่แล้ว",
+    },
+  ]);
+  
+  
   return (
-    <div className="min-h-screen bg-white text-white font-['Anuphan'] flex flex-col items-center bg-cover bg-center" style={{ backgroundImage: "url('/images/full-moon-night-doi-suthep-temple-chiangmai-thailand.jpg')" }}>
-      {/* Smooth Scroll */}
-      <style jsx global>{`
-        html {
-          scroll-behavior: smooth;
-        }
-      `}</style>
-
+    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-blue-900 text-white flex flex-col">
       {/* Header */}
-      <header className="w-full p-5 bg-[#1478D2] text-white text-center">
-        <h1>สวัสดี คุณเคน</h1>
-        <p>บุญรักษา</p>
+      <header className="flex items-center justify-between px-6 py-4 bg-blue-700">
+        <h1 className="text-xl font-bold">สะสมแต้มบุญ</h1>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setNotificationOpen(true)}
+            className="hover:text-yellow-300 transition flex items-center"
+          >
+            <FaBell size={24} />
+          </button>
+          <button
+            onClick={() => setProfileOpen(true)}
+            className="hover:text-yellow-300 transition flex items-center"
+          >
+            <FaUserCircle size={30} />
+          </button>
+        </div>
       </header>
 
-     {/* Profile Section */}
-     <section
-        id="profile"
-        className="w-full p-2 flex items-center justify-between bg-[#F2F4F7]  mt-2 shadow-lg"
-      >
-        <div className="flex items-center gap-4">
-          <img
-            src="/icons/yoga-pose-with-lotus-background.png"
-            alt="Profile"
-            className="w-16 h-16 rounded-full border-4 border-[#0D2745]"
-          />
-          <div>
-            <p className="font-bold text-[#0D2745]">ชื่อผู้ใช้: คุณเคน</p>
-            <p className="text-sm text-[#0D2745]">{userStatus}</p>
-          </div>
-        </div>
-        <button className="text-black font-bold flex items-center gap-2 hover:text-[#0D2745] transition-colors">
-          <FaCog className="text-lg text-black" /> การตั้งค่า
-        </button>
+      {/* Overview */}
+      <section className="text-center my-6 px-4">
+        <div className="text-4xl font-bold">{meritPoints} แต้ม</div>
+        <p className="text-lg mt-2">{userStatus}</p>
+        <p className="text-sm mt-1 italic">{quote}</p>
       </section>
 
+      {/* Progress */}
+      <section className="px-4">
+        <h2 className="text-lg font-bold flex items-center gap-2">
+          <FaChartLine /> ความก้าวหน้าในการสะสมแต้มบุญ
+        </h2>
+        <div className="bg-gray-200 rounded-full h-4 mt-2">
+          <div
+            className="bg-yellow-500 h-4 rounded-full"
+            style={{ width: `${(meritPoints / 1000) * 100}%` }}
+          ></div>
+        </div>
+        <p className="text-center text-sm mt-1">
+          {((meritPoints / 1000) * 100).toFixed(0)}% ของเป้าหมาย
+        </p>
+      </section>
 
-
-      {/* Main Content */}
-      <main className="flex-grow w-full p-5">
-        {/* Overview Section */}
-        <section id="overview" className="text-center mb-5">
-          <div className="bg-blue-200 text-white p-5 rounded-full w-32 h-32 mx-auto flex items-center justify-center text-3xl">
-            {meritPoints} <span className="text-sm">MERIT</span>
-          </div>
-          <h2 className="mt-3 text-lg text-white">{userStatus}</h2>
-          <p className="text-sm mt-2 text-white">{quote}</p>
-        </section>
-
-        {/* Statistics Section */}
-        <section id="statistics" className="w-full mb-5">
-          <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-            <FaChartLine className="text-blue-500" /> ความก้าวหน้าในการสะสมแต้มบุญ
-          </h2>
-          <div className="bg-gray-200 rounded-full h-4 mb-2">
-            <div className="bg-[#1478D2] h-4 rounded-full" style={{ width: `${(meritPoints / 1000) * 100}%` }}></div>
-          </div>
-          <p className="text-center text-sm text-white">{((meritPoints / 1000) * 100).toFixed(0)}% ของเป้าหมาย 1000 แต้ม</p>
-          {/* Simple Bar Chart */}
-          <div className="bg-[#F2F4F7] p-5 rounded-lg mt-5 shadow-md">
-            <h3 className="text-lg font-semibold text-[#0D2745] mb-3 text-center">สถิติการสะสมบุญ</h3>
-            <ResponsiveContainer width="100%" height={180}>
-              <BarChart data={statisticsData} barCategoryGap="30%">
-                <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fill: "#555" }} />
-                <YAxis tickLine={false} axisLine={false} tick={{ fill: "#555" }} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#FFFFFF', border: '1px solid #DDDDDD', borderRadius: '5px' }} 
-                  itemStyle={{ color: '#0D2745' }} 
-                />
-                <Bar dataKey="times" fill="#1478D2" radius={[10, 10, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-            <p className="text-center text-2xl font-medium text-[#0D2745] mt-4">รวม: {activityHistory.length} ครั้ง</p>
-          </div>
-        </section>
-
-        {/* Notifications Section */}
-        <section id="notifications" className="w-full mt-5 mb-5">
-          <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-            <FaBell className="text-red-500" /> การแจ้งเตือน
-          </h2>
-          <div className="flex flex-col gap-3">
-            {notifications.map((notification) => (
-              <div key={notification.id} className="p-4 bg-red-100 rounded-lg flex items-center gap-2">
-                <span role="img" aria-label="alert" className="text-xl">⚠️</span>
-                <p>{notification.message}</p>
+      {/* Activities */}
+      <section className="px-4 mt-6">
+        <h2 className="text-lg font-bold flex items-center gap-2">
+          <MdEventNote /> กิจกรรมล่าสุด
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          {activities.map((activity) => (
+            <div
+              key={activity.id}
+              className="bg-white text-black rounded-lg overflow-hidden shadow-md"
+            >
+              <img
+                src={activity.image}
+                alt={activity.description}
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-4">
+                <p className="font-medium">{activity.description}</p>
+                <p className="text-green-600 font-bold mt-2">+{activity.points} แต้ม</p>
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        {/* Activities Section */}
-        <section id="activities" className="w-full mt-5 mb-5">
-          <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-            <FaTasks className="text-blue-500" /> รายการกิจกรรมสะสมบุญ
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {activityHistory.map((activity) => (
-              <div key={activity.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src={activity.image} alt={activity.description} className="w-full h-32 object-cover" />
-                <div className="p-4 flex flex-col items-center">
-                  <p className="text-center font-medium text-[#0D2745]">{activity.description}</p>
-                  <p className="text-green-600 font-bold mt-2">+{activity.points} MERIT</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Rewards Section */}
-        <section id="rewards" className="w-full mt-5 mb-12">
-          <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-            <FaCrown className="text-yellow-500" /> รางวัลและสิทธิพิเศษ
-          </h2>
-          <div className="flex flex-wrap gap-3 justify-center">
-            {rewards.map((reward) => (
-              <div key={reward.id} className={`p-4 rounded-lg text-center flex flex-col items-center ${reward.status === "ปลดล็อคแล้ว" ? "bg-green-100" : "bg-red-100"}`}>
-                {reward.status === "ปลดล็อคแล้ว" ? <FaUnlock className="text-green-600 mb-2 text-xl" /> : <FaLock className="text-red-600 mb-2 text-xl" />}
-                <p className="text-[#0D2745]">{reward.name}</p>
-                <p className="text-sm text-[#0D2745]">{reward.status}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </main>
+      {/* Rewards */}
+      <section className="px-4 mt-6 flex-grow pb-20">
+        <h2 className="text-lg font-bold flex items-center gap-2">
+          <GiLotus className="text-white" /> รางวัลและสิทธิพิเศษ
+        </h2>
+        <div className="flex flex-wrap gap-4 justify-center mt-4">
+          {rewards.map((reward) => (
+            <div
+              key={reward.id}
+              className={`p-4 rounded-lg text-center flex flex-col items-center ${
+                reward.status === "ปลดล็อคแล้ว" ? "bg-green-100" : "bg-red-100"
+              } shadow-md`}
+            >
+              {reward.status === "ปลดล็อคแล้ว" ? (
+                <FaUnlock className="text-green-600 mb-2 text-2xl" />
+              ) : (
+                <FaLock className="text-red-600 mb-2 text-2xl" />
+              )}
+              <p className="text-sm font-semibold text-[#0D2745]">{reward.name}</p>
+              <p className="text-xs text-gray-600">{reward.status}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="w-full bg-white text-black p-2 flex justify-around md:justify-between fixed bottom-0">
-        <a
-          href="#overview"
-          aria-label="หน้าแรก"
-          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
-        >
-          <img src="/icons/buddhist-yoga-pose.png" alt="Home Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">หน้าแรก</span>
+      <footer className="bg-blue-800 text-white flex justify-around items-center py-2 fixed bottom-0 w-full ">
+        <a href="#overview" className="flex flex-col items-center text-sm hover:text-yellow-300">
+          <MdSelfImprovement size={30} />
+          <span>หน้าแรก</span>
         </a>
-        <a
-          href="#activities"
-          aria-label="กิจกรรม"
-          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
-        >
-          <img src="/icons/buddhist-lotus-flower.png" alt="Activities Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">กิจกรรม</span>
+        <a href="#activities" className="flex flex-col items-center text-sm hover:text-yellow-300">
+          <MdEventNote size={25} />
+          <span>กิจกรรม</span>
         </a>
-        <a
-          href="#rewards"
-          aria-label="รางวัล"
-          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
-        >
-          <img src="/icons/buddha-statue.png" alt="Rewards Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">รางวัล</span>
-        </a>
-        <a
-          href="#notifications"
-          aria-label="การแจ้งเตือน"
-          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
-        >
-          <img src="/icons/hand-sign-buddhism.png" alt="Notifications Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">แจ้งเตือน</span>
-        </a>
-        <a
-          href="#profile"
-          aria-label="โปรไฟล์"
-          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
-        >
-          <img src="/icons/two-tea-leaves.png" alt="Profile Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">โปรไฟล์</span>
-        </a>
-        <a
-          href="#statistics"
-          aria-label="สถิติ"
-          className="text-center flex flex-col items-center transition-colors hover:text-[#FFD700]"
-        >
-          <img src="/icons/three-flowers-.png" alt="Statistics Icon" className="w-6 h-6" /> <span className="text-xs md:text-sm font-bold">สถิติ</span>
+        <a href="#rewards" className="flex flex-col items-center text-sm hover:text-yellow-300">
+          <GiLotus size={25} />
+          <span>รางวัล</span>
         </a>
       </footer>
+
+    {/* Profile Modal */}
+<Dialog open={isProfileOpen} onClose={() => setProfileOpen(false)} className="relative z-50">
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg p-6 w-80 text-black">
+      <img
+        src={avatar}
+        alt="Avatar"
+        className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-gray-200 cursor-pointer"
+        onClick={() => setChangeAvatarOpen(true)}
+      />
+      <h3 className="text-lg font-bold text-center">{userName}</h3>
+      <p className="text-center text-sm text-gray-600">{userStatus}</p>
+      <button
+        onClick={() => {
+          setProfileOpen(false);
+          setEditProfileOpen(true);
+        }}
+        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
+      >
+        <FaEdit className="text-lg" /> แก้ไขโปรไฟล์
+      </button>
+      <button
+        onClick={() => setProfileOpen(false)}
+        className="mt-2 bg-gray-300 text-black px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
+      >
+        <FaTimes className="text-lg" /> ปิด
+      </button>
+    </div>
+  </div>
+</Dialog>
+
+{/* Edit Profile Modal */}
+<Dialog
+  open={isEditProfileOpen}
+  onClose={() => setEditProfileOpen(false)}
+  className="relative z-50"
+>
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg p-6 w-80 text-black">
+      <h3 className="text-lg font-bold text-center">แก้ไขโปรไฟล์</h3>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          setEditProfileOpen(false);
+        }}
+      >
+        {/* Username Field */}
+        <div className="mt-4 relative">
+          <label className="text-sm font-bold mb-2 block">ชื่อผู้ใช้:</label>
+          <div className="relative">
+            <FaUser className="absolute top-1/2 left-3 transform -translate-y-1/2 text-blue-500 text-xl" />
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 border rounded-md"
+            />
+          </div>
+        </div>
+
+        {/* Status Field */}
+        <div className="mt-4 relative">
+          <label className="text-sm font-bold mb-2 block">สถานะ:</label>
+          <div className="relative">
+            <MdSelfImprovement className="absolute top-1/2 left-3 transform -translate-y-1/2 text-green-800 text-2xl" />
+            <input
+              type="text"
+              value={userStatus}
+              onChange={(e) => setUserStatus(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 border rounded-md"
+            />
+          </div>
+        </div>
+
+        {/* Save Button */}
+        <button
+          type="submit"
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
+        >
+          <FaSave className="text-lg" /> บันทึก
+        </button>
+
+        {/* Cancel Button */}
+        <button
+          onClick={() => setEditProfileOpen(false)}
+          className="mt-2 bg-gray-300 text-black px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
+        >
+          <FaTimesCircle className="text-lg" /> ยกเลิก
+        </button>
+      </form>
+    </div>
+  </div>
+</Dialog>
+
+
+      
+      {/* Change Avatar Modal */}
+<Dialog open={isChangeAvatarOpen} onClose={() => setChangeAvatarOpen(false)} className="relative z-50">
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg p-6 w-80 text-black">
+      <h3 className="text-lg font-bold text-center">เปลี่ยนรูปโปรไฟล์</h3>
+      <div className="mt-4">
+        <label className="block text-sm font-bold mb-2">เลือกรูปโปรไฟล์ใหม่:</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                setAvatar(event.target.result);
+                setChangeAvatarOpen(false); // Close the modal after selection
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+          className="w-full px-3 py-2 border rounded-md"
+        />
+      </div>
+      <button
+        onClick={() => setChangeAvatarOpen(false)}
+        className="mt-4 bg-gray-300 text-black px-4 py-2 rounded-lg w-full"
+      >
+        ยกเลิก
+      </button>
+    </div>
+  </div>
+</Dialog>
+{/* Notification Modal */}
+<Dialog
+  open={isNotificationOpen}
+  onClose={() => setNotificationOpen(false)}
+  className="relative z-50"
+>
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white rounded-lg p-4 w-full max-w-md text-black mx-4">
+      {/* Modal Header */}
+      <h3 className="text-xl font-bold text-center">การแจ้งเตือน</h3>
+
+      {/* Notification List */}
+      <ul className="mt-6 space-y-4">
+        {notifications.map((notif) => (
+          <li
+            key={notif.id}
+            className="flex items-start gap-4 border-b pb-3 last:border-b-0"
+          >
+            {/* Icon */}
+            <div className="flex-shrink-0 text-2xl">{notif.icon}</div>
+            {/* Content */}
+            <div className="flex-1">
+              <p className="text-base font-semibold">{notif.title}</p>
+              <p className="text-sm text-gray-500">{notif.time}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* Close Button */}
+      <button
+        onClick={() => setNotificationOpen(false)}
+        className="mt-6 bg-blue-500 text-white w-full py-3 rounded-lg flex items-center justify-center gap-2 text-base font-medium"
+      >
+        <FaTimes className="text-xl" /> ปิด
+      </button>
+    </div>
+  </div>
+</Dialog>
+
+
     </div>
   );
 }

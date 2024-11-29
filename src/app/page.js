@@ -13,11 +13,12 @@ import {
   FaEdit,
   FaUser,
   FaSave,
-  FaTimesCircle 
+  FaTimesCircle ,
+  FaChartBar 
 } from "react-icons/fa";
-import { GiBuddha, GiLotus, GiTempleGate } from "react-icons/gi";
+import {  GiLotus  } from "react-icons/gi";
 import { MdSelfImprovement, MdEventNote } from "react-icons/md";
-
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 export default function Dashboard() {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
@@ -29,6 +30,12 @@ export default function Dashboard() {
 
   const meritPoints = 295;
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
+
+  // Data for the chart
+  const progressData = [
+  { name: "เป้าหมาย", points: 1000 },
+  { name: "สะสมแล้ว", points: meritPoints },
+  ];
 
   const activities = [
     {
@@ -57,6 +64,7 @@ export default function Dashboard() {
     { id: 2, name: "สิทธิพิเศษ 2", status: "ปลดล็อคแล้ว" },
     { id: 3, name: "สิทธิพิเศษ 3", status: "ยังไม่ปลดล็อค" },
   ];
+
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -77,8 +85,7 @@ export default function Dashboard() {
       time: "2 วันที่แล้ว",
     },
   ]);
-  
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-500 to-blue-900 text-white flex flex-col">
       {/* Header */}
@@ -118,9 +125,45 @@ export default function Dashboard() {
             style={{ width: `${(meritPoints / 1000) * 100}%` }}
           ></div>
         </div>
-        <p className="text-center text-sm mt-1">
-          {((meritPoints / 1000) * 100).toFixed(0)}% ของเป้าหมาย
-        </p>
+      
+        {/* Statistics Section */}
+<div className="mt-6 bg-white text-black rounded-lg p-4 shadow-md">
+<section className="px-4 mt-6">
+  <h2 className="text-lg font-bold flex items-center gap-2">
+    <FaChartBar  /> สถิติการทำบุญ
+  </h2>
+  <div className="mt-4 bg-white text-black rounded-lg p-4 shadow-md">
+    <ResponsiveContainer width="100%" height={200}>
+      <BarChart data={progressData}>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="points" fill="#82ca9d" barSize={30} />
+      </BarChart>
+    </ResponsiveContainer>
+    <p className="text-center text-sm mt-2">
+      {((meritPoints / 1000) * 100).toFixed(0)}% ของเป้าหมาย
+    </p>
+  </div>
+</section>
+
+  {/* Number of Completed Activities */}
+  <div className="flex justify-between items-center mt-4">
+    <div className="flex flex-col items-center">
+      <span className="text-2xl font-bold text-blue-600">
+        {activities.length}
+      </span>
+      <span className="text-sm text-gray-600">กิจกรรมสะสมบุญ</span>
+    </div>
+
+    {/* Total Merit Points */}
+    <div className="flex flex-col items-center">
+      <span className="text-2xl font-bold text-green-500">{meritPoints}</span>
+      <span className="text-sm text-gray-600">แต้มบุญสะสม</span>
+    </div>
+  </div>
+</div>
+
       </section>
 
       {/* Activities */}

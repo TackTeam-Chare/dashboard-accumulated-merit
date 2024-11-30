@@ -85,16 +85,17 @@ export default function Dashboard() {
   ]);
 
   return (
-    <div className="min-h-screen text-white flex flex-col" style={{
-      backgroundImage: "url('/images/full-moon-night-doi-suthep-temple-chiangmai-thailand.jpg')",
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
-    }}>
+    <div
+    className="min-h-screen flex flex-col"
+    style={{
+      background: "linear-gradient(to bottom, #1478D2, #0D2745)",
+      color: "white",
+    }}
+  >
       {/* Header */}
       <header className="flex items-center  justify-between px-6 py-4 bg-blue-700/80 backdrop-blur-md shadow-md rounded-b-lg">
         <h1 className="text-2xl font-extrabold tracking-wide drop-shadow-md">
-          สะสมแต้มบุญ
+          เเดชบอร์ดสะสมแต้มบุญ
         </h1>
         <div className="flex gap-4">
           <button

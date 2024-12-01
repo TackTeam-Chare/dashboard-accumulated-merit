@@ -41,30 +41,57 @@ export default function Dashboard() {
   const activities = [
     {
       id: 1,
-      description: "สะสมบุญใกล้บ้าน",
+      title: "สะสมบุญใกล้บ้าน",
+      description: "ร่วมทำบุญบริจาคสิ่งของให้กับวัดใกล้บ้านคุณ พร้อมทั้งช่วยเหลือชุมชนเพื่อสร้างสรรค์สิ่งดีงาม",
       points: 50,
       image:
         "https://static.thairath.co.th/media/dFQROr7oWzulq5FZYjXiaKmVO3vcxON9xLf2HYojmsfQAfq5rjDmmiJhYZiOmWuToDF.jpg",
+      duration: "วันที่ 1 ธันวาคม 2567 - 10 ธันวาคม 2567",
     },
     {
       id: 2,
-      description: "ฟังธรรมประจำวัน",
+      title: "ฟังธรรมประจำวัน",
+      description: "ฟังธรรมบรรยายจากพระอาจารย์ผู้ทรงคุณธรรม ช่วยเพิ่มพูนปัญญาและความสงบสุขในชีวิต",
       points: 30,
       image: "https://images.unsplash.com/photo-1530847887473-36dbaf586122?crop=entropy&w=1080",
+      duration: "วันที่ 5 ธันวาคม 2567 - 15 ธันวาคม 2567",
     },
     {
       id: 3,
-      description: "งานวัดที่ใกล้มาถึง",
+      title: "งานวัดที่ใกล้มาถึง",
+      description: "เข้าร่วมงานบุญในวัดใกล้บ้าน สนุกสนานกับกิจกรรม และร่วมพิธีกรรมเพื่อความเป็นสิริมงคล",
       points: 70,
       image: "https://cdn.chiangmainews.co.th/wp-content/uploads/2019/01/06133012/2109052.jpg",
+      duration: "วันที่ 12 ธันวาคม 2567 - 20 ธันวาคม 2567",
     },
   ];
+  
+  
 
   const rewards = [
-    { id: 1, name: "สิทธิพิเศษ 1", status: "ปลดล็อคแล้ว" },
-    { id: 2, name: "สิทธิพิเศษ 2", status: "ปลดล็อคแล้ว" },
-    { id: 3, name: "สิทธิพิเศษ 3", status: "ยังไม่ปลดล็อค" },
+    {
+      id: 1,
+      name: "สิทธิ์เข้าร่วมพิธีปลุกเสก",
+      status: "ปลดล็อคแล้ว",
+      description: "เข้าร่วมพิธีปลุกเสกพิเศษที่จัดโดยพระอาจารย์ชื่อดัง",
+      image: "https://assets.brandinside.asia/uploads/2024/03/ENNXO-BENJAPAKEE-AMULETS-1-1024x683.jpg",
+    },
+    {
+      id: 2,
+      name: "รับพระเครื่องลิมิเต็ด",
+      status: "ยังไม่ปลดล็อค",
+      description: "พระเครื่องรุ่นพิเศษสำหรับผู้สะสมแต้มบุญครบ 500 แต้ม",
+      image: "https://assets.brandinside.asia/uploads/2024/03/ENNXO-BENJAPAKEE-AMULETS-1-1024x683.jpg",
+    },
+    {
+      id: 3,
+      name: "สิทธิ์เยี่ยมชมวัดพิเศษ",
+      status: "ปลดล็อคแล้ว",
+      description: "เยี่ยมชมสถานที่ศักดิ์สิทธิ์ที่เปิดเฉพาะสมาชิก",
+      image: "https://assets.brandinside.asia/uploads/2024/03/ENNXO-BENJAPAKEE-AMULETS-1-1024x683.jpg",
+    },
   ];
+  
 
   const [notifications, setNotifications] = useState([
     {
@@ -86,39 +113,48 @@ export default function Dashboard() {
 
   return (
     <div
-    className="min-h-screen flex flex-col"
-    style={{
-      background: "linear-gradient(to bottom, #1478D2, #0D2745)",
-      color: "white",
-    }}
-  >
+      className="min-h-screen flex flex-col"
+      style={{
+        background: "linear-gradient(to bottom, #1478D2, #0D2745, #ffffff)",
+        color: "white",
+      }}
+    >
       {/* Header */}
-      <header className="flex items-center  justify-between px-6 py-4 bg-blue-700/80 backdrop-blur-md shadow-md rounded-b-lg">
-        <h1 className="text-2xl font-extrabold tracking-wide drop-shadow-md">
-          เเดชบอร์ดสะสมแต้มบุญ
-        </h1>
-        <div className="flex gap-4">
-          <button
-            onClick={() => setNotificationOpen(true)}
-            className="relative flex items-center justify-center p-2 rounded-full bg-blue-600 hover:bg-blue-800 shadow-lg transition-transform transform hover:scale-110"
-          >
-            <FaBell className="text-white text-lg" />
-          </button>
-          <button
-            onClick={() => setProfileOpen(true)}
-            className="relative flex items-center justify-center p-2 rounded-full bg-blue-600 hover:bg-blue-800 shadow-lg transition-transform transform hover:scale-110"
-          >
-            <FaUserCircle className="text-white text-2xl" />
-          </button>
-        </div>
-      </header>
+      <header
+  className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-[blue-700/80] backdrop-blur-md shadow-md"
+>
+  <h1 className="text-2xl font-extrabold tracking-wide drop-shadow-md">
+    เเดชบอร์ดสะสมแต้มบุญ
+  </h1>
+  <div className="flex gap-4">
+    <button
+      onClick={() => setNotificationOpen(true)}
+      className="relative flex items-center justify-center p-2 rounded-full bg-blue-600 hover:bg-blue-800 shadow-lg transition-transform transform hover:scale-110"
+    >
+      <FaBell className="text-white text-lg" />
+    </button>
+    <button
+      onClick={() => setProfileOpen(true)}
+      className="relative flex items-center justify-center p-2 rounded-full bg-blue-600 hover:bg-blue-800 shadow-lg transition-transform transform hover:scale-110"
+    >
+      <FaUserCircle className="text-white text-2xl" />
+    </button>
+  </div>
+</header>
 
-      {/* Overview */}
-      <section className="text-center my-6 px-4">
-        <div className="text-4xl font-bold drop-shadow-lg">{meritPoints} แต้ม</div>
-        <p className="text-lg mt-2 font-medium drop-shadow-sm">{userStatus}</p>
-        <p className="text-sm mt-1 italic text-gray-200 drop-shadow-sm">{quote}</p>
-      </section>
+<main className="flex-grow px-4 py-8 mt-20 pb-20">
+
+      <section className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-md p-6 mb-8 text-white">
+          <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
+            <MdSelfImprovement className="text-2xl md:text-3xl" /> {meritPoints} แต้ม
+          </h2>
+          <p className="mt-4 text-sm md:text-base">
+          {userStatus}
+          </p>
+          <p className="mt-4 text-sm md:text-base">
+          {quote}
+          </p>
+        </section>
 
       {/* Progress */}
       <section className="px-4">
@@ -138,58 +174,91 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Activities */}
       <section className="px-4 mt-8">
-        <h2 className="text-lg font-bold flex items-center gap-2">
-          <GiLotus  className="text-2xl"/> กิจกรรมล่าสุด
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-          {activities.map((activity) => (
-            <div
-              key={activity.id}
-              className="bg-gradient-to-r from-white to-gray-100 rounded-xl shadow-md overflow-hidden transform hover:-translate-y-2 hover:shadow-lg transition"
-            >
-              <img
-                src={activity.image}
-                alt={activity.description}
-                className="w-full h-32 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-md font-semibold text-gray-800">{activity.description}</h3>
-                <p className="text-green-600 font-bold mt-2">+{activity.points} แต้ม</p>
-              </div>
-            </div>
-          ))}
+  <h2 className="text-lg font-bold flex items-center gap-2 text-white">
+    <GiLotus className="text-2xl" /> กิจกรรมล่าสุด
+  </h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    {activities.map((activity) => (
+      <div
+        key={activity.id}
+        className="relative flex flex-col bg-gradient-to-r from-[#f8f9fa] to-[#e9ecef] rounded-3xl shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300 overflow-hidden"
+      >
+        {/* Ribbon */}
+        <div className="absolute top-0 left-0 bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-br-3xl">
+          {activity.points} แต้ม
         </div>
-      </section>
 
-      {/* Rewards */}
-      <section className="px-4 mt-8 flex-grow pb-20">
-        <h2 className="text-lg font-bold flex items-center gap-2">
-          <GiHolyGrail className=" text-4xl" /> รางวัลและสิทธิพิเศษ
-        </h2>
-        <div className="flex flex-wrap gap-6 justify-center mt-4">
-          {rewards.map((reward) => (
-            <div
-              key={reward.id}
-              className={`p-4 rounded-lg text-center flex flex-col items-center ${
-                reward.status === "ปลดล็อคแล้ว" ? "bg-green-100" : "bg-red-100"
-              } shadow-md`}
-            >
-              {reward.status === "ปลดล็อคแล้ว" ? (
-                <FaUnlock className="text-green-600 mb-2 text-3xl" />
-              ) : (
-                <FaLock className="text-red-600 mb-2 text-3xl" />
-              )}
-              <p className="text-md font-semibold text-[#0D2745]">{reward.name}</p>
-              <p className="text-xs text-gray-600">{reward.status}</p>
-            </div>
-          ))}
+        {/* Activity Image */}
+        <img
+          src={activity.image}
+          alt={activity.title}
+          className="w-full h-40 md:h-48 object-cover rounded-t-3xl"
+        />
+
+        {/* Activity Details */}
+        <div className="p-6 flex flex-col flex-grow space-y-4">
+          <h3 className="text-lg font-semibold text-blue-800">{activity.title}</h3>
+          <p className="text-sm text-gray-600 flex-grow">{activity.description}</p>
+          <p className="text-sm font-medium text-gray-500">
+            ระยะเวลา: {activity.duration}
+          </p>
+          <button
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-2 px-4 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition duration-200"
+          >
+            ร่วมกิจกรรม
+          </button>
         </div>
-      </section>
+      </div>
+    ))}
+  </div>
+</section>
+<section className="px-4 mt-8">
+  <h2 className="text-lg font-bold flex items-center gap-2 text-white">
+    <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ
+  </h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    {rewards.map((reward) => (
+      <div
+        key={reward.id}
+        className="bg-gradient-to-r from-[#FFD700] via-[#FF965A] to-[#0D2745] rounded-3xl shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300 overflow-hidden"
+      >
+        {/* Reward Image */}
+        <img
+          src={reward.image}
+          alt={reward.name}
+          className="w-full h-40 md:h-48 object-cover rounded-t-3xl"
+        />
 
+        {/* Reward Details */}
+        <div className="p-6 flex flex-col flex-grow space-y-4 text-white">
+          <h3 className="text-lg font-semibold">{reward.name}</h3>
+          <p className="text-sm text-gray-200">{reward.description}</p>
+          {reward.status === "ปลดล็อคแล้ว" ? (
+            <button
+              className="w-full bg-white text-[#1478D2] py-2 px-4 rounded-full shadow-md hover:bg-blue-100 transition flex items-center justify-center gap-2"
+            >
+              <FaUnlock className="text-lg" />
+              แลกรางวัล
+            </button>
+          ) : (
+            <button
+              disabled
+              className="w-full bg-[#1478D2] text-white py-2 px-4 rounded-full shadow-md flex items-center justify-center gap-2"
+            >
+              <FaLock className="text-lg" />
+              ยังไม่สามารถแลกได้
+            </button>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+      </main>
       {/* Footer */}
-      <footer className="bg-blue-800/70 backdrop-blur-md text-white flex justify-around items-center py-3 fixed bottom-0 w-full shadow-lg">
+      <footer className="fixed bottom-0 left-0 right-0 bg-blue-800/70 backdrop-blur-md text-white flex justify-around items-center py-3 shadow-lg">
         <a href="#overview" className="flex flex-col items-center text-sm hover:text-yellow-400 transition">
           <MdSelfImprovement size={28} />
           <span>หน้าแรก</span>

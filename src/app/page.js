@@ -80,8 +80,8 @@ export default function Dashboard() {
       id: 2,
       name: "รับพระเครื่องลิมิเต็ด",
       status: "ยังไม่ปลดล็อค",
-      description: "พระเครื่องรุ่นพิเศษสำหรับผู้สะสมแต้มบุญครบ 500 แต้ม",
-      image: "https://inwfile.com/s-gj/0a4xmp.jpg",
+      description: "พระปิดตารวยไม่ยั้ง หลวงปู่มหาศิลา สิริจันโท เนื้อผงยาไท้จินดาทิพมนต์มังคละมหามงคลหลวง 500 แต้ม",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYEg8MgRGDppDtr0siqP6ZjTTZ1BzAjX68Lw&s",
     },
   ];
   
@@ -235,7 +235,7 @@ export default function Dashboard() {
         <img
           src={reward.image}
           alt={reward.name}
-          className="w-full h-40 md:h-48 object-cover rounded-t-3xl"
+           className="w-full h-40 md:h-48 object-cover rounded-t-3xl"
         />
 
         {/* Reward Details */}

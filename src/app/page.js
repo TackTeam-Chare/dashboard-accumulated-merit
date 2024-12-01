@@ -13,6 +13,7 @@ import {
   FaSave,
   FaTimesCircle,
   FaChartPie,
+  FaCalendarAlt 
 } from "react-icons/fa";
 import { GiHolyGrail ,GiLotus  } from "react-icons/gi";
 import { MdOutlineEmojiEvents, MdEventNote,MdSelfImprovement  } from "react-icons/md";
@@ -182,11 +183,12 @@ export default function Dashboard() {
     {activities.map((activity) => (
       <div
         key={activity.id}
-        className="relative flex flex-col bg-gradient-to-r from-[#f8f9fa] to-[#e9ecef] rounded-3xl shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300 overflow-hidden"
+        className="relative flex flex-col bg-gradient-to-r from-[#0D2745] to-[#1478D2] rounded-3xl shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300 overflow-hidden"
       >
-        {/* Ribbon */}
-        <div className="absolute top-0 left-0 bg-yellow-500 text-white text-xs md:text-sm px-3 py-1 rounded-br-3xl">
-          {activity.points} แต้ม
+        {/* Ribbon for Points */}
+        <div className="absolute top-0 left-0 bg-yellow-500 text-white text-sm md:text-base px-3 py-2 rounded-br-3xl flex items-center gap-2">
+          <MdOutlineEmojiEvents className="text-lg" />
+          <span>{activity.points} แต้ม</span>
         </div>
 
         {/* Activity Image */}
@@ -197,22 +199,25 @@ export default function Dashboard() {
         />
 
         {/* Activity Details */}
-        <div className="p-6 flex flex-col flex-grow space-y-4">
-          <h3 className="text-lg font-semibold text-blue-800">{activity.title}</h3>
-          <p className="text-sm text-gray-600 flex-grow">{activity.description}</p>
-          <p className="text-sm font-medium text-gray-500">
+        <div className="p-6 flex flex-col flex-grow space-y-4 text-white">
+          <h3 className="text-lg font-semibold">{activity.title}</h3>
+          <p className="text-sm text-gray-300 flex-grow">{activity.description}</p>
+          <p className="text-sm font-medium">
+            <FaCalendarAlt className="inline-block mr-2 text-yellow-300" />
             ระยะเวลา: {activity.duration}
           </p>
           <button
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-2 px-4 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-900 transition duration-200"
+            className="w-full bg-gradient-to-r from-green-400 to-green-700 text-white py-2 px-4 rounded-full shadow-md hover:from-green-500 hover:to-green-800 transition flex items-center justify-center gap-2"
           >
-            ร่วมกิจกรรม
+            <MdEventNote className="text-lg" />
+            เข้าร่วมกิจกรรม
           </button>
         </div>
       </div>
     ))}
   </div>
 </section>
+
 <section className="px-4 mt-8">
   <h2 className="text-lg font-bold flex items-center gap-2 text-white">
     <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ

@@ -13,7 +13,9 @@ import {
   FaSave,
   FaTimesCircle,
   FaChartPie,
-  FaCalendarAlt 
+  FaCalendarAlt,
+  FaQuoteLeft,
+  FaQuoteRight 
 } from "react-icons/fa";
 import { GiHolyGrail ,GiLotus  } from "react-icons/gi";
 import { MdOutlineEmojiEvents, MdEventNote,MdSelfImprovement  } from "react-icons/md";
@@ -33,11 +35,8 @@ export default function Dashboard() {
   const meritPoints = 295;
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
 
-  // Data for the chart
-  const progressData = [
-    { name: "เป้าหมาย", points: 1000 },
-    { name: "สะสมแล้ว", points: meritPoints },
-  ];
+
+
 
   const activities = [
     {
@@ -82,14 +81,7 @@ export default function Dashboard() {
       name: "รับพระเครื่องลิมิเต็ด",
       status: "ยังไม่ปลดล็อค",
       description: "พระเครื่องรุ่นพิเศษสำหรับผู้สะสมแต้มบุญครบ 500 แต้ม",
-      image: "https://assets.brandinside.asia/uploads/2024/03/ENNXO-BENJAPAKEE-AMULETS-1-1024x683.jpg",
-    },
-    {
-      id: 3,
-      name: "สิทธิ์เยี่ยมชมวัดพิเศษ",
-      status: "ปลดล็อคแล้ว",
-      description: "เยี่ยมชมสถานที่ศักดิ์สิทธิ์ที่เปิดเฉพาะสมาชิก",
-      image: "https://assets.brandinside.asia/uploads/2024/03/ENNXO-BENJAPAKEE-AMULETS-1-1024x683.jpg",
+      image: "https://inwfile.com/s-gj/0a4xmp.jpg",
     },
   ];
   
@@ -145,17 +137,28 @@ export default function Dashboard() {
 
 <main className="flex-grow px-4 py-8 mt-20 pb-20">
 
-      <section className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-md p-6 mb-8 text-white">
-          <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
-            <MdSelfImprovement className="text-2xl md:text-3xl" /> {meritPoints} แต้ม
-          </h2>
-          <p className="mt-4 text-sm md:text-base">
-          {userStatus}
-          </p>
-          <p className="mt-4 text-sm md:text-base">
-          {quote}
-          </p>
-        </section>
+<section className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-lg p-6 mb-8 text-white relative">
+  {/* Floating Icon */}
+  <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-4 rounded-full shadow-md">
+    <MdSelfImprovement className="text-4xl" />
+  </div>
+
+  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
+    <GiLotus className="text-2xl md:text-3xl text-yellow-300" /> {meritPoints} แต้ม
+  </h2>
+  
+  <p className="mt-4 text-sm md:text-base flex items-center gap-2">
+    <HiOutlineBadgeCheck className="text-xl text-green-400" />
+    {userStatus}
+  </p>
+  
+  <p className="mt-4 text-sm md:text-base flex items-center gap-2 italic">
+    <FaQuoteLeft className="text-xl text-gray-300" />
+    {quote}
+    <FaQuoteRight className="text-xl text-gray-300" />
+  </p>
+</section>
+
 
       {/* Progress */}
       <section className="px-4">

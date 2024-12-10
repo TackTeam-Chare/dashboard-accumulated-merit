@@ -11,8 +11,18 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 export default async function handler(req, res) {
+  // Set CORS Headers
+  res.setHeader("Access-Control-Allow-Origin", process.env.NEXT_PUBLIC_FRONTEND_URL || "*"); // Use your frontend URL
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // Handle preflight request
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" }); // อนุญาตเฉพาะ POST เท่านั้น
+    return res.status(405).json({ error: "Method not allowed" }); // Allow only POST requests
   }
 
   const { lineUserId, displayName } = req.body;

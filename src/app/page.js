@@ -1,6 +1,6 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import liff from "@line/liff";
 import { Dialog } from "@headlessui/react";
 import {
   FaUnlock,
@@ -31,12 +31,13 @@ export default function Dashboard() {
   const [userName, setUserName] = useState("คุณเคน");
   const [userStatus, setUserStatus] = useState("ผู้สะสมแต้มเริ่มต้น");
   const [avatar, setAvatar] = useState("https://i.pravatar.cc/150");
+  const [statusMessage, setStatusMessage] = useState("กำลังดึงข้อมูล...");
+  const [meritPoints, setMeritPoints] = useState(0);
 
-  const meritPoints = 295;
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  // const meritPoints = 295;
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
-
-
-
 
   const activities = [
     {
@@ -65,8 +66,6 @@ export default function Dashboard() {
       duration: "วันที่ 12 ธันวาคม 2567 - 20 ธันวาคม 2567",
     },
   ];
-  
-  
 
   const rewards = [
     {
@@ -104,6 +103,74 @@ export default function Dashboard() {
     },
   ]);
 
+    // LIFF initialization in useEffect
+    useEffect(() => {
+      const initLiff = async () => {
+        try {
+          const liffId = process.env.NEXT_PUBLIC_LIFF_ID; // ใช้ LIFF ID จาก .env
+          await liff.init({ liffId });
+    
+          if (liff.isLoggedIn()) {
+            setIsLoggedIn(true);
+            const profile = await liff.getProfile();
+    
+            // ดึงข้อมูลจาก LIFF
+            const lineUserId = profile.userId;
+            const displayName = profile.displayName;
+    
+            // ส่งข้อมูลไปยัง backend
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ lineUserId, displayName }),
+            });
+            
+    
+            const userData = await response.json();
+    
+            // ตั้งค่าข้อมูลใน state
+            setUserName(userData.Nickname);
+            setUserStatus(userData.MeritStatus);
+            setMeritPoints(userData.MeritPoint || 0);
+            setAvatar(profile.pictureUrl || "https://i.pravatar.cc/150");
+            setStatusMessage("ข้อมูลของคุณพร้อมใช้งาน");
+          } else {
+            liff.login();
+          }
+        } catch (error) {
+          console.error("Error initializing LIFF:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    
+      initLiff();
+    }, []);
+    
+    // Empty dependency array ensures it runs only once
+  
+    // Loading state
+    if (isLoading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-800">
+          <p>กำลังโหลด...</p>
+        </div>
+      );
+    }
+  
+    // If not logged in
+    if (!isLoggedIn) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-800">
+          <p>กรุณาล็อกอิน...</p>
+        </div>
+      );
+    }
+    
+  
+    
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -117,8 +184,9 @@ export default function Dashboard() {
   className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-[blue-700/80] backdrop-blur-md shadow-md"
 >
   <h1 className="text-2xl font-extrabold tracking-wide drop-shadow-md">
-    เเดชบอร์ดสะสมแต้มบุญ
+    เเดชบอร์ดสะสมแต้มบุญ 
   </h1>
+
   <div className="flex gap-4">
     <button
       onClick={() => setNotificationOpen(true)}
@@ -293,7 +361,7 @@ export default function Dashboard() {
               onClick={() => setChangeAvatarOpen(true)}
             />
             <h3 className="text-lg font-bold text-center">{userName}</h3>
-            <p className="text-center text-sm text-gray-600">{userStatus}</p>
+            <p className="text-center text-sm text-gray-600">{statusMessage}</p>
             <button
               onClick={() => {
                 setProfileOpen(false);
@@ -321,7 +389,8 @@ export default function Dashboard() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                setEditProfileOpen(false);
+                // setEditProfileOpen(false);
+                handleSaveProfile();
               }}
             >
               {/* Username Field */}
@@ -345,8 +414,8 @@ export default function Dashboard() {
     <HiOutlineBadgeCheck className="absolute top-1/2 left-3 transform -translate-y-1/2 text-blue-500 text-2xl" />
     <input
       type="text"
-      value={userStatus}
-      onChange={(e) => setUserStatus(e.target.value)}
+      value={statusMessage}
+      onChange={(e) => setStatusMessage(e.target.value)}
       className="w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-300 focus:outline-none"
     />
   </div>

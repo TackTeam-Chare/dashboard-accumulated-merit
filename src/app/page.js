@@ -119,7 +119,7 @@ export default function Dashboard() {
             const displayName = profile.displayName;
     
             // ส่งข้อมูลไปยัง backend
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/data`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

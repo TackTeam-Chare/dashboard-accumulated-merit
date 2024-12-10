@@ -10,6 +10,9 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 export async function POST(req) {
+  console.log("Request received...");
+  const start = Date.now();
+
   try {
     const { lineUserId, displayName } = await req.json();
 
@@ -17,28 +20,28 @@ export async function POST(req) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
 
-    // Check if user exists
+    console.log(`Received data: ${JSON.stringify({ lineUserId, displayName })}`);
+
+    // Connect to database
     const [existingUser] = await pool.query("SELECT * FROM usersdatabase WHERE UserID = ?", [
       lineUserId,
     ]);
+    console.log(`Query completed in ${Date.now() - start}ms`);
 
     if (existingUser.length > 0) {
       return new Response(JSON.stringify(existingUser[0]), { status: 200 });
     }
 
-    // Insert new user
+    console.log("Inserting new user...");
     await pool.query(
       "INSERT INTO usersdatabase (UserID, Nickname, MeritPoint, MeritStatus, ConcentrationPoints, ConcentrationStatus) VALUES (?, ?, ?, ?, ?, ?)",
       [lineUserId, displayName, 0, "Beginner", 0, "Beginner"]
     );
 
-    const [newUser] = await pool.query("SELECT * FROM usersdatabase WHERE UserID = ?", [
-      lineUserId,
-    ]);
-
+    const [newUser] = await pool.query("SELECT * FROM usersdatabase WHERE UserID = ?", [lineUserId]);
     return new Response(JSON.stringify(newUser[0]), { status: 201 });
   } catch (error) {
-    console.error("Error handling user login:", error.message);
+    console.error("Error:", error.message);
     return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500 });
   }
 }

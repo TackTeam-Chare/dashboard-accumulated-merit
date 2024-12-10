@@ -118,7 +118,6 @@ export default function Dashboard() {
             const lineUserId = profile.userId;
             const displayName = profile.displayName;
     
-            // ส่งข้อมูลไปยัง backend
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/data`, {
               method: "POST",
               headers: {
@@ -126,6 +125,7 @@ export default function Dashboard() {
               },
               body: JSON.stringify({ lineUserId, displayName }),
             });
+            
             
     
             const userData = await response.json();

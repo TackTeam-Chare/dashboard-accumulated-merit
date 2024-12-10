@@ -1,18 +1,4 @@
-const express = require("express");
-const mysql = require("mysql2/promise");
-const cors = require("cors");
-require("dotenv").config();
-
-const app = express();
-app.use(express.json());
-
-// CORS Configuration
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || "*", // URL ของ Frontend ที่อนุญาต เช่น https://your-frontend.vercel.app
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-app.use(cors(corsOptions));
+import mysql from "mysql2/promise";
 
 // MySQL Database Connection
 const dbConfig = {
@@ -24,8 +10,11 @@ const dbConfig = {
 
 const pool = mysql.createPool(dbConfig);
 
-// API to handle user login and retrieve or create user data
-app.post("/api/user", async (req, res) => {
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" }); // อนุญาตเฉพาะ POST เท่านั้น
+  }
+
   const { lineUserId, displayName } = req.body;
 
   if (!lineUserId || !displayName) {
@@ -42,7 +31,7 @@ app.post("/api/user", async (req, res) => {
 
     if (existingUser.length > 0) {
       console.log("User exists:", existingUser[0]);
-      return res.json(existingUser[0]);
+      return res.status(200).json(existingUser[0]);
     }
 
     console.log("User does not exist. Creating new user...");
@@ -61,15 +50,9 @@ app.post("/api/user", async (req, res) => {
     ]);
 
     console.log("New user data:", newUser[0]);
-    return res.json(newUser[0]);
+    return res.status(201).json(newUser[0]);
   } catch (error) {
     console.error("Error handling user login:", error.message, error.stack);
-    res.status(500).json({ error: "Internal server error." });
+    return res.status(500).json({ error: "Internal server error." });
   }
-});
-
-// Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+}

@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import liff from "@line/liff";
 import { Dialog } from "@headlessui/react";
@@ -107,30 +108,30 @@ export default function Dashboard() {
     useEffect(() => {
       const initLiff = async () => {
         try {
-          const liffId = process.env.NEXT_PUBLIC_LIFF_ID; // ใช้ LIFF ID จาก .env
+          const liffId = process.env.NEXT_PUBLIC_LIFF_ID; // Use LIFF ID from .env
           await liff.init({ liffId });
     
           if (liff.isLoggedIn()) {
             setIsLoggedIn(true);
             const profile = await liff.getProfile();
     
-            // ดึงข้อมูลจาก LIFF
+            // Extract data from LIFF profile
             const lineUserId = profile.userId;
             const displayName = profile.displayName;
     
-            // ส่งข้อมูลไปยัง backend
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ lineUserId, displayName }),
-            });
-            
+            // Send data to the backend using axios
+            const response = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user`,
+              { lineUserId, displayName },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
     
-            const userData = await response.json();
-    
-            // ตั้งค่าข้อมูลใน state
+            // Check the response and update state
+            const userData = response.data;
             setUserName(userData.Nickname);
             setUserStatus(userData.MeritStatus);
             setMeritPoints(userData.MeritPoint || 0);

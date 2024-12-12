@@ -37,24 +37,6 @@ export default function Dashboard() {
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
   const progressPercentage = ((meritPoints / totalMeritGoal) * 100).toFixed(2);
 
-  const rewards = [
-    {
-      id: 1,
-      name: "สิทธิ์เข้าร่วมพิธีปลุกเสก",
-      status: "ปลดล็อคแล้ว",
-      description: "เข้าร่วมพิธีปลุกเสกพิเศษที่จัดโดยพระอาจารย์ชื่อดัง",
-      image: "https://assets.brandinside.asia/uploads/2024/03/ENNXO-BENJAPAKEE-AMULETS-1-1024x683.jpg",
-    },
-    {
-      id: 2,
-      name: "รับพระเครื่องลิมิเต็ด",
-      status: "ยังไม่ปลดล็อค",
-      description: "พระปิดตารวยไม่ยั้ง หลวงปู่มหาศิลา สิริจันโท เนื้อผงยาไท้จินดาทิพมนต์มังคละมหามงคลหลวง 500 แต้ม",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYEg8MgRGDppDtr0siqP6ZjTTZ1BzAjX68Lw&s",
-    },
-  ];
-  
-
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -192,7 +174,7 @@ export default function Dashboard() {
 
 <main className="flex-grow px-4 py-8 mt-20 pb-20">
 
-<section className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-lg p-6 mb-8 text-white relative">
+<section id="overview"  className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-lg p-6 mb-8 text-white relative">
   {/* Floating Icon */}
   <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-4 rounded-full shadow-md">
     <MdSelfImprovement className="text-4xl" />
@@ -231,7 +213,7 @@ export default function Dashboard() {
   </div>
 </section>
 
-	    <section className="px-4 mt-8">
+	    <section id="activities" className="px-4 mt-8">
  <h2 className="text-lg font-bold flex items-center gap-2 text-white">
     <GiLotus className="text-2xl" /> กิจกรรมล่าสุด
   </h2>
@@ -255,7 +237,7 @@ export default function Dashboard() {
 </section>
 
         <main className="flex-grow px-4 py-6">
-        <section className="px-4 mt-8">
+        <section id="rewards" className="px-4 mt-8">
           <h2 className="text-lg font-bold flex items-center gap-2">
             <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ
           </h2>

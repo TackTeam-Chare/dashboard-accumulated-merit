@@ -19,3 +19,6 @@ body {
   --accent-orange: #FF965A;
 }
 
+html {
+  scroll-behavior: smooth;
+}

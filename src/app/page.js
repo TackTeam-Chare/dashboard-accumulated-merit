@@ -212,29 +212,55 @@ export default function Dashboard() {
     </p>
   </div>
 </section>
-
-	    <section id="activities" className="px-4 mt-8">
- <h2 className="text-lg font-bold flex items-center gap-2 text-white">
-    <GiLotus className="text-2xl" /> กิจกรรมล่าสุด
+<section id="activities" className="px-4 mt-8">
+  <h2 className="text-lg font-bold flex items-center gap-2 text-white">
+    <GiLotus className="text-2xl text-yellow-300" /> กิจกรรมล่าสุด
   </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          {activities.map((activity) => (
-            <div
-              key={activity.ActivityID}
-              className="bg-gradient-to-r from-blue-600 to-blue-800 p-4 rounded-xl shadow-lg"
-            >
-              <h3 className="font-bold">{activity.NameOfActivities}</h3>
-              <p className="text-sm text-gray-200">{activity.Status}</p>
-              <p>
-                <MdOutlineEmojiEvents className="inline" /> {activity.Rewards} points
-              </p>
-              <p>
-                <FaCalendarAlt className="inline" /> {activity.Start} (Duration: {activity.Duration} mins)
-              </p>
-            </div>
-          ))}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+    {activities.map((activity) => (
+      <div
+        key={activity.ActivityID}
+        className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 p-4 rounded-xl shadow-md transition transform hover:scale-105"
+      >
+        <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm px-2 py-1 rounded-full shadow-md">
+          <MdOutlineEmojiEvents className="inline mr-1" /> {activity.Rewards} แต้ม
         </div>
+        <h3 className="text-xl font-bold text-yellow-300 mb-2 flex items-center gap-2">
+          <FaCalendarAlt className="text-lg" />
+          {activity.NameOfActivities}
+        </h3>
+        <p className="text-sm font-bold mt-2">
+          สถานะ:{" "}
+          <span
+            className={`${
+              activity.Status === "Active"
+                ? "text-green-400"
+                : "text-orange-400"
+            }`}
+          >
+            {activity.Status === "Active" ? "กำลังดำเนินการ" : "เสร็จสิ้น"}
+          </span>
+        </p>
+        <p className="text-sm text-gray-300 mt-2">
+          <MdEventNote className="inline mr-1" />
+          เริ่ม: {new Date(activity.Start).toLocaleString("th-TH")}
+        </p>
+        <p className="text-sm text-gray-300">
+          <MdSelfImprovement className="inline mr-1" />
+          ระยะเวลา: {activity.Duration} นาที
+        </p>
+        <div className="mt-4 flex justify-between items-center">
+          <button className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white py-2 px-4 rounded-full text-sm shadow-md hover:bg-yellow-500 transition">
+            ดูเพิ่มเติม
+          </button>
+          <GiLotus className="text-yellow-300 text-2xl" />
+        </div>
+      </div>
+    ))}
+  </div>
 </section>
+
+
 
         <main className="flex-grow px-4 py-6">
         <section id="rewards" className="px-4 mt-8">

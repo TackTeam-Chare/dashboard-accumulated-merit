@@ -31,8 +31,11 @@ export default function Dashboard() {
   const [activities, setActivities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  // const meritPoints = 295;
+  const [totalMeritGoal, setTotalMeritGoal] = useState(100000);
+  const [specialFeatures, setSpecialFeatures] = useState([]);
+
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
+  const progressPercentage = ((meritPoints / totalMeritGoal) * 100).toFixed(2);
 
   const rewards = [
     {
@@ -104,7 +107,6 @@ export default function Dashboard() {
           setAvatar(profile.pictureUrl || "https://i.pravatar.cc/150");
           setStatusMessage(profile.statusMessage);
           setActivities(activities || []);
-
           } else {
             liff.login();
           }
@@ -118,7 +120,23 @@ export default function Dashboard() {
       initLiff();
     }, []);
     
-    // Empty dependency array ensures it runs only once
+    useEffect(() => {
+      // ฟังก์ชันสำหรับดึงข้อมูลจากฐานข้อมูล
+      const fetchSpecialFeatures = async () => {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/specialfeatures`
+          );
+          setSpecialFeatures(response.data); // เก็บข้อมูลที่ได้ใน State
+        } catch (error) {
+          console.error("Error fetching special features:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+  
+      fetchSpecialFeatures();
+    }, []);
   
     // Loading state
     if (isLoading) {
@@ -196,25 +214,27 @@ export default function Dashboard() {
   </p>
 </section>
 
+<section className="px-4">
+  <h2 className="text-lg font-bold flex items-center gap-2">
+    <FaChartPie className="text-2xl" /> ความก้าวหน้าในการสะสมแต้มบุญ
+  </h2>
+  <div className="relative mt-4">
+    <div className="h-4 bg-gray-300 rounded-full">
+      <div
+        className="h-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600"
+        style={{ width: `${progressPercentage}%`, transition: "width 1s ease" }}
+      ></div>
+    </div>
+    <p className="text-center text-sm mt-2 text-yellow-200">
+      {progressPercentage}% ของเป้าหมาย ({meritPoints}/{totalMeritGoal})
+    </p>
+  </div>
+</section>
 
-      {/* Progress */}
-      <section className="px-4">
-        <h2 className="text-lg font-bold flex items-center gap-2">
-          <FaChartPie className="text-2xl" /> ความก้าวหน้าในการสะสมแต้มบุญ
-        </h2>
-        <div className="relative mt-4">
-          <div className="h-4 bg-gray-300 rounded-full">
-            <div
-              className="h-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600"
-              style={{ width: `${(meritPoints / 1000) * 100}%`, transition: 'width 1s ease' }}
-            ></div>
-          </div>
-          <p className="text-center text-sm mt-2 text-yellow-200">
-            {((meritPoints / 1000) * 100).toFixed(0)}% ของเป้าหมาย
-          </p>
-        </div>
-      </section>
-
+	    <section className="px-4 mt-8">
+ <h2 className="text-lg font-bold flex items-center gap-2 text-white">
+    <GiLotus className="text-2xl" /> กิจกรรมล่าสุด
+  </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {activities.map((activity) => (
             <div
@@ -232,49 +252,40 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
-
-<section className="px-4 mt-8">
-  <h2 className="text-lg font-bold flex items-center gap-2 text-white">
-    <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ
-  </h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-    {rewards.map((reward) => (
-      <div
-        key={reward.id}
-        className="bg-gradient-to-r from-[#FFD700] via-[#FF965A] to-[#0D2745] rounded-3xl shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300 overflow-hidden"
-      >
-        {/* Reward Image */}
-        <img
-          src={reward.image}
-          alt={reward.name}
-           className="w-full h-40 md:h-48 object-cover rounded-t-3xl"
-        />
-
-        {/* Reward Details */}
-        <div className="p-6 flex flex-col flex-grow space-y-4 text-white">
-          <h3 className="text-lg font-semibold">{reward.name}</h3>
-          <p className="text-sm text-gray-200">{reward.description}</p>
-          {reward.status === "ปลดล็อคแล้ว" ? (
-            <button
-              className="w-full bg-white text-[#1478D2] py-2 px-4 rounded-full shadow-md hover:bg-blue-100 transition flex items-center justify-center gap-2"
-            >
-              <FaUnlock className="text-lg" />
-              แลกรางวัล
-            </button>
-          ) : (
-            <button
-              disabled
-              className="w-full bg-[#1478D2] text-white py-2 px-4 rounded-full shadow-md flex items-center justify-center gap-2"
-            >
-              <FaLock className="text-lg" />
-              ยังไม่สามารถแลกได้
-            </button>
-          )}
-        </div>
-      </div>
-    ))}
-  </div>
 </section>
+
+        <main className="flex-grow px-4 py-6">
+        <section className="px-4 mt-8">
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {specialFeatures.map((feature) => (
+              <div
+                key={feature.FeatureID}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 rounded-xl shadow-lg hover:scale-105 transition"
+              >
+                <h3 className="text-lg font-semibold">{feature.FeatureName}</h3>
+                <p className="text-sm">{feature.Type}</p>
+                {feature.StatusID === 1 ? (
+                  <button className="mt-4 w-full bg-white text-blue-700 py-2 px-4 rounded-full shadow-md">
+                    <FaUnlock className="inline mr-2" />
+                    ใช้รางวัล
+                  </button>
+                ) : (
+                  <button
+                    className="mt-4 w-full bg-gray-400 text-white py-2 px-4 rounded-full"
+                    disabled
+                  >
+                    <FaLock className="inline mr-2" />
+                    ยังไม่ปลดล็อค
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
 
       </main>
       {/* Footer */}
@@ -294,50 +305,55 @@ export default function Dashboard() {
 
       </footer>
 
-      {/* Profile Modal */}
-      <Dialog open={isProfileOpen} onClose={() => setProfileOpen(false)} className="relative z-50">
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 w-80 text-black">
-            <img
-              src={avatar}
-              alt="Avatar"
-              className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-gray-200 cursor-pointer"
-              onClick={() => setChangeAvatarOpen(true)}
-            />
-            <h3 className="text-lg font-bold text-center">{userName}</h3>
-            <p className="text-center text-sm text-gray-600">{statusMessage}</p>
-            <button
-              onClick={() => setProfileOpen(false)}
-              className="mt-2 bg-gray-300 text-black px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
-            >
-              <FaTimes className="text-lg" /> ปิด
-            </button>
-          </div>
-        </div>
-      </Dialog>
+{/* Profile Modal */}
+<Dialog open={isProfileOpen} onClose={() => setProfileOpen(false)} className="relative z-50">
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+    <div className="bg-gradient-to-br from-[#1478D2] to-[#0D2745] rounded-xl p-5 w-11/12 max-w-sm text-white shadow-lg">
+      {/* Profile Image */}
+      <div className="flex flex-col items-center">
+        <img
+          src={avatar}
+          alt="Avatar"
+          className="w-24 h-24 rounded-full border-4 border-white mb-4 cursor-pointer hover:opacity-90 transition"
+          onClick={() => setChangeAvatarOpen(true)}
+        />
+        <h3 className="text-xl font-semibold text-white">{userName}</h3>
+        <p className="text-sm text-gray-300 mt-2">{statusMessage}</p>
+      </div>
+
+      {/* Close Button */}
+      <button
+        onClick={() => setProfileOpen(false)}
+        className="mt-6 bg-gradient-to-r from-[#0D2745] to-[#1478D2] text-white w-full py-2 rounded-lg flex items-center justify-center gap-2 shadow-md hover:opacity-90 transition duration-150"
+      >
+        <FaTimes className="text-lg" /> ปิด
+      </button>
+    </div>
+  </div>
+</Dialog>
 
 {/* Notification Modal */}
 <Dialog open={isNotificationOpen} onClose={() => setNotificationOpen(false)} className="relative z-50">
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div className="bg-white rounded-lg p-4 w-full max-w-md text-black mx-4 shadow-lg">
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+    <div className="bg-gradient-to-br from-[#1478D2] to-[#0D2745] rounded-xl p-4 w-11/12 max-w-sm text-white shadow-md">
       {/* Modal Header */}
-      <h3 className="text-2xl font-bold text-center text-gray-800">การแจ้งเตือน</h3>
+      <h3 className="text-2xl font-semibold text-center text-white mb-4">การแจ้งเตือน</h3>
 
       {/* Notification List */}
-      <ul className="mt-6 space-y-4">
+      <ul className="space-y-3">
         {notifications.map((notif) => (
           <li
             key={notif.id}
-            className="flex items-start gap-4 border-b pb-3 last:border-b-0"
+            className="flex items-start gap-3 border-b border-white/20 pb-2 last:border-b-0"
           >
             {/* Icon */}
-            <div className="flex-shrink-0 text-2xl text-gradient bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 p-2 rounded-full shadow-lg">
-              <HiBellAlert />
+            <div className="flex-shrink-0 bg-gradient-to-r from-[#FFD700] via-[#FF965A] to-[#FF6347] p-2 rounded-full shadow-sm">
+              <HiBellAlert className="text-white text-lg" />
             </div>
             {/* Content */}
             <div className="flex-1">
-              <p className="text-base font-semibold text-gray-900">{notif.title}</p>
-              <p className="text-sm text-gray-500">{notif.time}</p>
+              <p className="text-base font-medium text-white">{notif.title}</p>
+              <p className="text-sm text-gray-300">{notif.time}</p>
             </div>
           </li>
         ))}
@@ -346,13 +362,15 @@ export default function Dashboard() {
       {/* Close Button */}
       <button
         onClick={() => setNotificationOpen(false)}
-        className="mt-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white w-full py-3 rounded-lg flex items-center justify-center gap-2 text-base font-medium shadow-md hover:shadow-lg hover:bg-blue-600 transition duration-300"
+        className="mt-5 bg-gradient-to-r from-[#1478D2] to-[#0D2745] text-white w-full py-2 rounded-lg flex items-center justify-center gap-2 text-base font-medium shadow-md hover:opacity-90 transition duration-150"
       >
-        <HiOutlineXCircle className="text-xl" /> ปิด
+        <HiOutlineXCircle className="text-lg" /> ปิด
       </button>
     </div>
   </div>
 </Dialog>
+
+
 
     </div>
   );

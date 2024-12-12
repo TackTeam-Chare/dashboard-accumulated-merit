@@ -9,6 +9,10 @@ import {
   FaBell,
   FaTimes,
   FaUserCircle,
+  FaEdit,
+  FaUser,
+  FaSave,
+  FaTimesCircle,
   FaChartPie,
   FaCalendarAlt,
   FaQuoteLeft,
@@ -23,16 +27,46 @@ import { HiOutlineXCircle } from "react-icons/hi2";
 export default function Dashboard() {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
+  const [isEditProfileOpen, setEditProfileOpen] = useState(false);
+  const [isChangeAvatarOpen, setChangeAvatarOpen] = useState(false);
   const [userName, setUserName] = useState("คุณเคน");
   const [userStatus, setUserStatus] = useState("ผู้สะสมแต้มเริ่มต้น");
   const [avatar, setAvatar] = useState("https://i.pravatar.cc/150");
   const [statusMessage, setStatusMessage] = useState("กำลังดึงข้อมูล...");
   const [meritPoints, setMeritPoints] = useState(0);
-  const [activities, setActivities] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   // const meritPoints = 295;
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
+
+  const activities = [
+    {
+      id: 1,
+      title: "สะสมบุญใกล้บ้าน",
+      description: "ร่วมทำบุญบริจาคสิ่งของให้กับวัดใกล้บ้านคุณ พร้อมทั้งช่วยเหลือชุมชนเพื่อสร้างสรรค์สิ่งดีงาม",
+      points: 50,
+      image:
+        "https://static.thairath.co.th/media/dFQROr7oWzulq5FZYjXiaKmVO3vcxON9xLf2HYojmsfQAfq5rjDmmiJhYZiOmWuToDF.jpg",
+      duration: "วันที่ 1 ธันวาคม 2567 - 10 ธันวาคม 2567",
+    },
+    {
+      id: 2,
+      title: "ฟังธรรมประจำวัน",
+      description: "ฟังธรรมบรรยายจากพระอาจารย์ผู้ทรงคุณธรรม ช่วยเพิ่มพูนปัญญาและความสงบสุขในชีวิต",
+      points: 30,
+      image: "https://images.unsplash.com/photo-1530847887473-36dbaf586122?crop=entropy&w=1080",
+      duration: "วันที่ 5 ธันวาคม 2567 - 15 ธันวาคม 2567",
+    },
+    {
+      id: 3,
+      title: "งานวัดที่ใกล้มาถึง",
+      description: "เข้าร่วมงานบุญในวัดใกล้บ้าน สนุกสนานกับกิจกรรม และร่วมพิธีกรรมเพื่อความเป็นสิริมงคล",
+      points: 70,
+      image: "https://cdn.chiangmainews.co.th/wp-content/uploads/2019/01/06133012/2109052.jpg",
+      duration: "วันที่ 12 ธันวาคม 2567 - 20 ธันวาคม 2567",
+    },
+  ];
 
   const rewards = [
     {
@@ -95,16 +129,14 @@ export default function Dashboard() {
                 },
               }
             );
-            
-             // Check the response and update state
-          const { user, activities } = response.data;
-          setUserName(user.Nickname);
-          setUserStatus(user.MeritStatus);
-          setMeritPoints(user.MeritPoint || 0);
-          setAvatar(profile.pictureUrl || "https://i.pravatar.cc/150");
-          setStatusMessage(profile.statusMessage);
-          setActivities(activities || []);
-
+    
+            // Check the response and update state
+            const userData = response.data;
+            setUserName(userData.Nickname);
+            setUserStatus(userData.MeritStatus);
+            setMeritPoints(userData.MeritPoint || 0);
+            setAvatar(profile.pictureUrl || "https://i.pravatar.cc/150");
+            setStatusMessage(profile.statusMessage || "");
           } else {
             liff.login();
           }
@@ -215,23 +247,48 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          {activities.map((activity) => (
-            <div
-              key={activity.ActivityID}
-              className="bg-gradient-to-r from-blue-600 to-blue-800 p-4 rounded-xl shadow-lg"
-            >
-              <h3 className="font-bold">{activity.NameOfActivities}</h3>
-              <p className="text-sm text-gray-200">{activity.Status}</p>
-              <p>
-                <MdOutlineEmojiEvents className="inline" /> {activity.Rewards} points
-              </p>
-              <p>
-                <FaCalendarAlt className="inline" /> {activity.Start} (Duration: {activity.Duration} mins)
-              </p>
-            </div>
-          ))}
+      <section className="px-4 mt-8">
+  <h2 className="text-lg font-bold flex items-center gap-2 text-white">
+    <GiLotus className="text-2xl" /> กิจกรรมล่าสุด
+  </h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    {activities.map((activity) => (
+      <div
+        key={activity.id}
+        className="relative flex flex-col bg-gradient-to-r from-[#0D2745] to-[#1478D2] rounded-3xl shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300 overflow-hidden"
+      >
+        {/* Ribbon for Points */}
+        <div className="absolute top-0 left-0 bg-yellow-500 text-white text-sm md:text-base px-3 py-2 rounded-br-3xl flex items-center gap-2">
+          <MdOutlineEmojiEvents className="text-lg" />
+          <span>{activity.points} แต้ม</span>
         </div>
+
+        {/* Activity Image */}
+        <img
+          src={activity.image}
+          alt={activity.title}
+          className="w-full h-40 md:h-48 object-cover rounded-t-3xl"
+        />
+
+        {/* Activity Details */}
+        <div className="p-6 flex flex-col flex-grow space-y-4 text-white">
+          <h3 className="text-lg font-semibold">{activity.title}</h3>
+          <p className="text-sm text-gray-300 flex-grow">{activity.description}</p>
+          <p className="text-sm font-medium">
+            <FaCalendarAlt className="inline-block mr-2 text-yellow-300" />
+            ระยะเวลา: {activity.duration}
+          </p>
+          <button
+            className="w-full bg-gradient-to-r from-green-400 to-green-700 text-white py-2 px-4 rounded-full shadow-md hover:from-green-500 hover:to-green-800 transition flex items-center justify-center gap-2"
+          >
+            <MdEventNote className="text-lg" />
+            เข้าร่วมกิจกรรม
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
 
 <section className="px-4 mt-8">
   <h2 className="text-lg font-bold flex items-center gap-2 text-white">
@@ -307,10 +364,114 @@ export default function Dashboard() {
             <h3 className="text-lg font-bold text-center">{userName}</h3>
             <p className="text-center text-sm text-gray-600">{statusMessage}</p>
             <button
+              onClick={() => {
+                setProfileOpen(false);
+                setEditProfileOpen(true);
+              }}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
+            >
+              <FaEdit className="text-lg" /> แก้ไขโปรไฟล์
+            </button>
+            <button
               onClick={() => setProfileOpen(false)}
               className="mt-2 bg-gray-300 text-black px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
             >
               <FaTimes className="text-lg" /> ปิด
+            </button>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Edit Profile Modal */}
+      <Dialog open={isEditProfileOpen} onClose={() => setEditProfileOpen(false)} className="relative z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-80 text-black">
+            <h3 className="text-lg font-bold text-center">แก้ไขโปรไฟล์</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                // setEditProfileOpen(false);
+                handleSaveProfile();
+              }}
+            >
+              {/* Username Field */}
+              <div className="mt-4 relative">
+                <label className="text-sm font-bold mb-2 block">ชื่อผู้ใช้:</label>
+                <div className="relative">
+                  <FaUser className="absolute top-1/2 left-3 transform -translate-y-1/2 text-blue-500 text-xl" />
+                  <input
+                    type="text"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    className="w-full pl-10 pr-3 py-2 border rounded-md"
+                  />
+                </div>
+              </div>
+
+      {/* Status Field */}
+<div className="mt-4 relative">
+  <label className="text-sm font-bold mb-2 block">สถานะ:</label>
+  <div className="relative">
+    <HiOutlineBadgeCheck className="absolute top-1/2 left-3 transform -translate-y-1/2 text-blue-500 text-2xl" />
+    <input
+      type="text"
+      value={statusMessage}
+      onChange={(e) => setStatusMessage(e.target.value)}
+      className="w-full pl-10 pr-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-300 focus:outline-none"
+    />
+  </div>
+</div>
+
+
+              {/* Save Button */}
+              <button
+                type="submit"
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
+              >
+                <FaSave className="text-lg" /> บันทึก
+              </button>
+
+              {/* Cancel Button */}
+              <button
+                onClick={() => setEditProfileOpen(false)}
+                className="mt-2 bg-gray-300 text-black px-4 py-2 rounded-lg w-full flex items-center justify-center gap-2"
+              >
+                <FaTimesCircle className="text-lg" /> ยกเลิก
+              </button>
+            </form>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Change Avatar Modal */}
+      <Dialog open={isChangeAvatarOpen} onClose={() => setChangeAvatarOpen(false)} className="relative z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-80 text-black">
+            <h3 className="text-lg font-bold text-center">เปลี่ยนรูปโปรไฟล์</h3>
+            <div className="mt-4">
+              <label className="block text-sm font-bold mb-2">เลือกรูปโปรไฟล์ใหม่:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      setAvatar(event.target.result);
+                      setChangeAvatarOpen(false); // Close the modal after selection
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+            <button
+              onClick={() => setChangeAvatarOpen(false)}
+              className="mt-4 bg-gray-300 text-black px-4 py-2 rounded-lg w-full"
+            >
+              ยกเลิก
             </button>
           </div>
         </div>

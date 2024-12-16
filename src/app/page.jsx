@@ -142,53 +142,53 @@ export default function Dashboard() {
     
   return (
     <div
-      className="min-h-screen flex flex-col"
-      style={{
-        background: "linear-gradient(to bottom, #1478D2, #0D2745, #ffffff)",
-        color: "white",
-      }}
-    >
+    className="min-h-screen bg-gradient-to-br from-[#0D2745] via-[#1478D2] to-[#ffffff] text-white"
+  >
       {/* Header */}
-      <header
-  className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-[blue-700/80] backdrop-blur-md shadow-md"
+      <header className="fixed  top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#0D2745] to-[#1478D2] shadow-lg">
+        <h1 className="text-3xl font-extrabold tracking-wider text-yellow-300 drop-shadow-lg">
+          แดชบอร์ดสะสมแต้มบุญ
+        </h1>
+        <div className="flex gap-4">
+          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+          <button
+            onClick={() => setNotificationOpen(true)}
+            className="relative flex items-center justify-center p-3 rounded-full bg-yellow-400 text-[#0D2745] shadow-md hover:bg-yellow-300 transition-transform transform hover:scale-110"
+          >
+            <FaBell className="text-2xl" />
+          </button>
+          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
+          <button
+            onClick={() => setProfileOpen(true)}
+            className="relative flex items-center justify-center p-3 rounded-full bg-yellow-400 text-[#0D2745] shadow-md hover:bg-yellow-300 transition-transform transform hover:scale-110"
+          >
+            <FaUserCircle className="text-3xl" />
+          </button>
+        </div>
+      </header>
+
+      <main className="flex-grow px-4 py-8 mt-24 md:mt-32 lg:mt-36 pb-20">
+
+
+
+<section
+  id="overview"
+  className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-lg p-6 mb-8 text-white relative flex flex-col items-center"
 >
-  <h1 className="text-2xl font-extrabold tracking-wide drop-shadow-md">
-    เเดชบอร์ดสะสมแต้มบุญ 
-  </h1>
-
-  <div className="flex gap-4">
-    <button
-      onClick={() => setNotificationOpen(true)}
-      className="relative flex items-center justify-center p-2 rounded-full bg-blue-600 hover:bg-blue-800 shadow-lg transition-transform transform hover:scale-110"
-    >
-      <FaBell className="text-white text-lg" />
-    </button>
-    <button
-      onClick={() => setProfileOpen(true)}
-      className="relative flex items-center justify-center p-2 rounded-full bg-blue-600 hover:bg-blue-800 shadow-lg transition-transform transform hover:scale-110"
-    >
-      <FaUserCircle className="text-white text-2xl" />
-    </button>
-  </div>
-</header>
-
-<main className="flex-grow px-4 py-8 mt-20 pb-20">
-
-<section id="overview"  className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-lg p-6 mb-8 text-white relative">
-  {/* Floating Icon */}
-  <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-4 rounded-full shadow-md">
-    <MdSelfImprovement className="text-4xl" />
+  {/* Icon in Center Top */}
+  <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-md -mt-12">
+    <MdSelfImprovement className="text-5xl text-white" />
   </div>
 
-  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
+  <h2 className="mt-4 text-lg md:text-xl font-bold flex items-center gap-2">
     <GiLotus className="text-2xl md:text-3xl text-yellow-300" /> {meritPoints} แต้ม
   </h2>
-  
+
   <p className="mt-4 text-sm md:text-base flex items-center gap-2">
     <HiOutlineBadgeCheck className="text-xl text-green-400" />
     {userStatus}
   </p>
-  
+
   <p className="mt-4 text-sm md:text-base flex items-center gap-2 italic">
     <FaQuoteLeft className="text-xl text-gray-300" />
     {quote}
@@ -196,12 +196,14 @@ export default function Dashboard() {
   </p>
 </section>
 
+
 <section className="px-4">
   <h2 className="text-lg font-bold flex items-center gap-2">
     <FaChartPie className="text-2xl" /> ความก้าวหน้าในการสะสมแต้มบุญ
   </h2>
   <div className="relative mt-4">
     <div className="h-4 bg-gray-300 rounded-full">
+      {/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
       <div
         className="h-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600"
         style={{ width: `${progressPercentage}%`, transition: "width 1s ease" }}
@@ -249,12 +251,7 @@ export default function Dashboard() {
           <MdSelfImprovement className="inline mr-1" />
           ระยะเวลา: {activity.Duration} นาที
         </p>
-        <div className="mt-4 flex justify-between items-center">
-          <button className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white py-2 px-4 rounded-full text-sm shadow-md hover:bg-yellow-500 transition">
-            ดูเพิ่มเติม
-          </button>
-          <GiLotus className="text-yellow-300 text-2xl" />
-        </div>
+
       </div>
     ))}
   </div>
@@ -264,35 +261,63 @@ export default function Dashboard() {
 
         <main className="flex-grow px-4 py-6">
         <section id="rewards" className="px-4 mt-8">
-          <h2 className="text-lg font-bold flex items-center gap-2">
-            <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {specialFeatures.map((feature) => (
+  <h2 className="text-lg font-bold flex items-center gap-2">
+    <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ
+  </h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    {specialFeatures.map((feature) => {
+      const requiredPoints = totalMeritGoal; // เป้าหมายรวมที่ใช้ปลดล็อครางวัล
+      const remainingPoints = requiredPoints - meritPoints; // คะแนนที่ยังขาด
+
+      return (
+        <div
+          key={feature.FeatureID}
+          className="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 rounded-xl shadow-lg hover:scale-105 transition"
+        >
+          <h3 className="text-lg font-semibold">{feature.FeatureName}</h3>
+          <p className="text-sm">{feature.Type}</p>
+
+          {/* Progress Bar */}
+          <div className="relative mt-4">
+            <div className="h-2 bg-gray-300 rounded-full">
               <div
-                key={feature.FeatureID}
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 rounded-xl shadow-lg hover:scale-105 transition"
-              >
-                <h3 className="text-lg font-semibold">{feature.FeatureName}</h3>
-                <p className="text-sm">{feature.Type}</p>
-                {feature.StatusID === 1 ? (
-                  <button className="mt-4 w-full bg-white text-blue-700 py-2 px-4 rounded-full shadow-md">
-                    <FaUnlock className="inline mr-2" />
-                    ใช้รางวัล
-                  </button>
-                ) : (
-                  <button
-                    className="mt-4 w-full bg-gray-400 text-white py-2 px-4 rounded-full"
-                    disabled
-                  >
-                    <FaLock className="inline mr-2" />
-                    ยังไม่ปลดล็อค
-                  </button>
-                )}
-              </div>
-            ))}
+                className="h-2 bg-yellow-600 rounded-full"
+                style={{
+                  width: `${(meritPoints / requiredPoints) * 100}%`,
+                  transition: "width 1s ease",
+                }}
+              ></div>
+            </div>
+            <p className="text-center text-xs mt-2 text-yellow-200">
+              {meritPoints >= requiredPoints
+                ? "ปลดล็อคสำเร็จ!"
+                : `ต้องการอีก ${
+                    remainingPoints > 0 ? remainingPoints : 0
+                  } แต้มเพื่อปลดล็อก`}
+            </p>
           </div>
-        </section>
+
+          {/* Unlock Button */}
+          {meritPoints >= requiredPoints ? (
+            <button className="mt-4 w-full bg-white text-blue-700 py-2 px-4 rounded-full shadow-md hover:bg-blue-200">
+              <FaUnlock className="inline mr-2" />
+              ใช้รางวัล
+            </button>
+          ) : (
+            <button
+              className="mt-4 w-full bg-gray-400 text-white py-2 px-4 rounded-full"
+              disabled
+            >
+              <FaLock className="inline mr-2" />
+              ยังไม่ปลดล็อค
+            </button>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</section>
+
       </main>
 
       </main>
@@ -319,6 +344,7 @@ export default function Dashboard() {
     <div className="bg-gradient-to-br from-[#1478D2] to-[#0D2745] rounded-xl p-5 w-11/12 max-w-sm text-white shadow-lg">
       {/* Profile Image */}
       <div className="flex flex-col items-center">
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
         <img
           src={avatar}
           alt="Avatar"
@@ -330,6 +356,7 @@ export default function Dashboard() {
       </div>
 
       {/* Close Button */}
+      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
       <button
         onClick={() => setProfileOpen(false)}
         className="mt-6 bg-gradient-to-r from-[#0D2745] to-[#1478D2] text-white w-full py-2 rounded-lg flex items-center justify-center gap-2 shadow-md hover:opacity-90 transition duration-150"
@@ -368,6 +395,7 @@ export default function Dashboard() {
       </ul>
 
       {/* Close Button */}
+      {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
       <button
         onClick={() => setNotificationOpen(false)}
         className="mt-5 bg-gradient-to-r from-[#1478D2] to-[#0D2745] text-white w-full py-2 rounded-lg flex items-center justify-center gap-2 text-base font-medium shadow-md hover:opacity-90 transition duration-150"

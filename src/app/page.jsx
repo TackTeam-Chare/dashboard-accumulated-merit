@@ -33,36 +33,29 @@ export default function Dashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [totalMeritGoal, setTotalMeritGoal] = useState(100000);
   const [specialFeatures, setSpecialFeatures] = useState([]);
-
+  const [notifications, setNotifications] = useState([]);
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
   const progressPercentage = ((meritPoints / totalMeritGoal) * 100).toFixed(2);
 
 
-  const calculateDaysRemaining = (endDate) => {
-  const end = new Date(endDate); // แปลง EndDate เป็นวันที่
-  const today = new Date(); // วันที่ปัจจุบัน
-  const diffTime = end - today; // คำนวณส่วนต่างเวลา
-  const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // แปลงเป็นวัน
-  return daysRemaining;
-};
 
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "คุณมีภารกิจพิเศษที่ยังไม่เสร็จ!",
-      time: "3 ชั่วโมงที่แล้ว",
-    },
-    {
-      id: 2,
-      title: "กิจกรรม: ฟังธรรมประจำวันเสร็จสมบูรณ์",
-      time: "เมื่อวานนี้",
-    },
-    {
-      id: 3,
-      title: "ขอเชิญร่วมกิจกรรมทำบุญวันพระที่วัดใกล้บ้าน",
-      time: "2 วันที่แล้ว",
-    },
-  ]);
+  // const [notifications, setNotifications] = useState([
+  //   {
+  //     id: 1,
+  //     title: "คุณมีภารกิจพิเศษที่ยังไม่เสร็จ!",
+  //     time: "3 ชั่วโมงที่แล้ว",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "กิจกรรม: ฟังธรรมประจำวันเสร็จสมบูรณ์",
+  //     time: "เมื่อวานนี้",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "ขอเชิญร่วมกิจกรรมทำบุญวันพระที่วัดใกล้บ้าน",
+  //     time: "2 วันที่แล้ว",
+  //   },
+  // ]);
 
     // LIFF initialization in useEffect
     useEffect(() => {
@@ -111,23 +104,50 @@ export default function Dashboard() {
       initLiff();
     }, []);
     
-    useEffect(() => {
-      // ฟังก์ชันสำหรับดึงข้อมูลจากฐานข้อมูล
-      const fetchSpecialFeatures = async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/specialfeatures`
+    // ดึงข้อมูล specialFeatures
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+          useEffect(() => {
+    const fetchSpecialFeatures = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/specialfeatures`
+        );
+        setSpecialFeatures(response.data);
+
+        // คำนวณการแจ้งเตือนจาก EndDate และ MeritPoints
+        const currentDate = new Date();
+        const newNotifications = response.data.map((feature) => {
+          const endDate = new Date(feature.EndDate);
+          const daysRemaining = Math.ceil(
+            (endDate - currentDate) / (1000 * 60 * 60 * 24)
           );
-          setSpecialFeatures(response.data); // เก็บข้อมูลที่ได้ใน State
-        } catch (error) {
-          console.error("Error fetching special features:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-  
-      fetchSpecialFeatures();
-    }, []);
+          const pointsRemaining = totalMeritGoal - meritPoints;
+
+          let message = "";
+          if (daysRemaining > 0) {
+            message = `รางวัล ${feature.FeatureName} เหลือเวลาอีก ${daysRemaining} วัน`;
+          } else {
+            message = `รางวัล ${feature.FeatureName} หมดอายุแล้ว`;
+          }
+
+          if (pointsRemaining > 0) {
+            message += ` | ต้องการอีก ${pointsRemaining} แต้มเพื่อปลดล็อก`;
+          }
+
+          return {
+            id: feature.FeatureID,
+            title: message,
+          };
+        });
+
+        setNotifications(newNotifications);
+      } catch (error) {
+        console.error("Error fetching features:", error);
+      }
+    };
+
+    fetchSpecialFeatures();
+  }, [meritPoints]);
   
     // Loading state
     if (isLoading) {
@@ -165,6 +185,12 @@ export default function Dashboard() {
             className="relative flex items-center justify-center p-3 rounded-full bg-yellow-400 text-[#0D2745] shadow-md hover:bg-yellow-300 transition-transform transform hover:scale-110"
           >
             <FaBell className="text-2xl" />
+              {/* แสดงจำนวนแจ้งเตือน */}
+          {notifications.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-1">
+              {notifications.length}
+            </span>
+          )}
           </button>
           {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
           <button

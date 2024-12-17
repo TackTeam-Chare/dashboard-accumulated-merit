@@ -37,6 +37,15 @@ export default function Dashboard() {
   const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
   const progressPercentage = ((meritPoints / totalMeritGoal) * 100).toFixed(2);
 
+
+  const calculateDaysRemaining = (endDate) => {
+  const end = new Date(endDate); // แปลง EndDate เป็นวันที่
+  const today = new Date(); // วันที่ปัจจุบัน
+  const diffTime = end - today; // คำนวณส่วนต่างเวลา
+  const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // แปลงเป็นวัน
+  return daysRemaining;
+};
+
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -168,9 +177,6 @@ export default function Dashboard() {
       </header>
 
       <main className="flex-grow px-4 py-8 mt-24 md:mt-32 lg:mt-36 pb-20">
-
-
-
 <section
   id="overview"
   className="bg-gradient-to-br from-[#1478D2] via-[#0D2745] to-[#0D2745] rounded-xl shadow-lg p-6 mb-8 text-white relative flex flex-col items-center"
@@ -180,8 +186,8 @@ export default function Dashboard() {
     <MdSelfImprovement className="text-5xl text-white" />
   </div>
 
-  <h2 className="mt-4 text-lg md:text-xl font-bold flex items-center gap-2">
-    <GiLotus className="text-2xl md:text-3xl text-yellow-300" /> {meritPoints} แต้ม
+  <h2 className="mt-4 text-lg md:text-xl font-bold flex items-center gap-2 ">
+    <GiLotus className="text-2xl md:text-3xl text-yellow-300 " /> {meritPoints} แต้ม
   </h2>
 
   <p className="mt-4 text-sm md:text-base flex items-center gap-2">
@@ -195,11 +201,9 @@ export default function Dashboard() {
     <FaQuoteRight className="text-xl text-gray-300" />
   </p>
 </section>
-
-
 <section className="px-4">
   <h2 className="text-lg font-bold flex items-center gap-2">
-    <FaChartPie className="text-2xl" /> ความก้าวหน้าในการสะสมแต้มบุญ
+    <FaChartPie className="text-2xl text-yellow-300" /> ความก้าวหน้าในการสะสมแต้มบุญ
   </h2>
   <div className="relative mt-4">
     <div className="h-4 bg-gray-300 rounded-full">
@@ -216,7 +220,7 @@ export default function Dashboard() {
 </section>
 <section id="activities" className="px-4 mt-8">
   <h2 className="text-lg font-bold flex items-center gap-2 text-white">
-    <GiLotus className="text-2xl text-yellow-300" /> กิจกรรมล่าสุด
+    <GiLotus className="text-2xl text-yellow-300 " /> กิจกรรมที่ทำล่าสุด
   </h2>
   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
     {activities.map((activity) => (
@@ -227,8 +231,8 @@ export default function Dashboard() {
         <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm px-2 py-1 rounded-full shadow-md">
           <MdOutlineEmojiEvents className="inline mr-1" /> {activity.Rewards} แต้ม
         </div>
-        <h3 className="text-xl font-bold text-yellow-300 mb-2 flex items-center gap-2">
-          <FaCalendarAlt className="text-lg" />
+        <h3 className="text-xl font-bold  mb-2 flex items-center gap-2">
+          <FaCalendarAlt className="text-lg text-yellow-300" />
           {activity.NameOfActivities}
         </h3>
         <p className="text-sm font-bold mt-2">
@@ -245,7 +249,7 @@ export default function Dashboard() {
         </p>
         <p className="text-sm text-gray-300 mt-2">
           <MdEventNote className="inline mr-1" />
-          เริ่ม: {new Date(activity.Start).toLocaleString("th-TH")}
+          {new Date(activity.Start).toLocaleString("th-TH")}
         </p>
         <p className="text-sm text-gray-300">
           <MdSelfImprovement className="inline mr-1" />
@@ -256,67 +260,103 @@ export default function Dashboard() {
     ))}
   </div>
 </section>
-
-
-
         <main className="flex-grow px-4 py-6">
         <section id="rewards" className="px-4 mt-8">
-  <h2 className="text-lg font-bold flex items-center gap-2">
-    <GiLotus className="text-2xl" /> รางวัลและสิทธิพิเศษ
+  <h2 className="text-2xl font-extrabold text-center mb-6 tracking-wide">
+    <GiHolyGrail className="inline-block mr-2 text-4xl text-yellow-300" />
+    รางวัลและสิทธิพิเศษ
   </h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
     {specialFeatures.map((feature) => {
-      const requiredPoints = totalMeritGoal; // เป้าหมายรวมที่ใช้ปลดล็อครางวัล
-      const remainingPoints = requiredPoints - meritPoints; // คะแนนที่ยังขาด
+      const requiredPoints = totalMeritGoal;
+      const remainingPoints = requiredPoints - meritPoints;
+
+      // ดึง EndDate และคำนวณวันคงเหลือ
+      const endDate = feature.EndDate ? new Date(feature.EndDate) : null;
+      const today = new Date();
+      const diffTime = endDate ? endDate - today : 0;
+      const daysRemaining = endDate ? Math.ceil(diffTime / (1000 * 60 * 60 * 24)) : 0;
 
       return (
         <div
           key={feature.FeatureID}
-          className="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 rounded-xl shadow-lg hover:scale-105 transition"
+          className="bg-gradient-to-br from-yellow-500 to-orange-500 p-6 rounded-2xl shadow-2xl relative hover:scale-105 transition-transform duration-300"
         >
-          <h3 className="text-lg font-semibold">{feature.FeatureName}</h3>
-          <p className="text-sm">{feature.Type}</p>
+          {/* Decorative Top Icon */}
+          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-white p-3 rounded-full shadow-md">
+            <GiLotus className="text-3xl text-yellow-500" />
+          </div>
+
+          {/* Title */}
+          <h3 className="text-center text-xl font-bold text-white mt-4">
+            {feature.FeatureName}
+          </h3>
+          <p className="text-center text-sm font-semibold mt-2">
+            ประเภท: {feature.Type}
+          </p>
+
+          {/* ระยะเวลาที่เหลือ */}
+          {endDate ? (
+            <p className="text-center text-white mt-2 text-sm">
+              <MdEventNote className="inline mr-1 " />
+              {daysRemaining > 0
+                ? `เหลืออีก ${daysRemaining} วัน (สิ้นสุดวันที่ ${endDate.toLocaleDateString("th-TH")})`
+                : "หมดอายุแล้ว"}
+            </p>
+          ) : (
+            <p className="text-center text-white mt-2 text-sm">
+              <MdEventNote className="inline mr-1 text-yellow-300" />
+              ไม่ได้ระบุวันสิ้นสุด
+            </p>
+          )}
 
           {/* Progress Bar */}
           <div className="relative mt-4">
             <div className="h-2 bg-gray-300 rounded-full">
+              {/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
               <div
-                className="h-2 bg-yellow-600 rounded-full"
+                className="h-2 bg-yellow-400 rounded-full"
                 style={{
                   width: `${(meritPoints / requiredPoints) * 100}%`,
                   transition: "width 1s ease",
                 }}
               ></div>
             </div>
-            <p className="text-center text-xs mt-2 text-yellow-200">
+            <p className="text-center text-xs mt-2 ">
               {meritPoints >= requiredPoints
                 ? "ปลดล็อคสำเร็จ!"
-                : `ต้องการอีก ${
-                    remainingPoints > 0 ? remainingPoints : 0
-                  } แต้มเพื่อปลดล็อก`}
+                : `ต้องการอีก ${remainingPoints > 0 ? remainingPoints : 0} แต้ม`}
             </p>
           </div>
 
           {/* Unlock Button */}
-          {meritPoints >= requiredPoints ? (
-            <button className="mt-4 w-full bg-white text-blue-700 py-2 px-4 rounded-full shadow-md hover:bg-blue-200">
-              <FaUnlock className="inline mr-2" />
-              ใช้รางวัล
-            </button>
-          ) : (
-            <button
-              className="mt-4 w-full bg-gray-400 text-white py-2 px-4 rounded-full"
-              disabled
-            >
-              <FaLock className="inline mr-2" />
-              ยังไม่ปลดล็อค
-            </button>
-          )}
+          <div className="mt-6 flex justify-center">
+            {meritPoints >= requiredPoints ? (
+              // biome-ignore lint/a11y/useButtonType: <explanation>
+<button className="bg-green-500 hover:bg-green-400 text-white px-6 py-2 rounded-full shadow-lg transition duration-300">
+                <FaUnlock className="inline mr-2" />
+                ใช้รางวัล
+              </button>
+            ) : (
+              // biome-ignore lint/a11y/useButtonType: <explanation>
+<button
+                className="bg-gray-500 text-gray-200 px-6 py-2 rounded-full cursor-not-allowed shadow-lg"
+                disabled
+              >
+                <FaLock className="inline mr-2" />
+                ยังไม่ปลดล็อค
+              </button>
+            )}
+          </div>
         </div>
       );
     })}
   </div>
 </section>
+
+
+
 
       </main>
 

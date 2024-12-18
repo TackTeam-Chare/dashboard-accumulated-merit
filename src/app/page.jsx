@@ -23,7 +23,7 @@ import { HiOutlineXCircle } from "react-icons/hi2";
 export default function Dashboard() {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
-  const [userName, setUserName] = useState("คุณเคน");
+  const [userName, setUserName] = useState("ไม่ทราบชื่อ");
   const [userStatus, setUserStatus] = useState("ผู้สะสมแต้มเริ่มต้น");
   const [avatar, setAvatar] = useState("https://i.pravatar.cc/150");
   const [statusMessage, setStatusMessage] = useState("กำลังดึงข้อมูล...");
@@ -34,28 +34,9 @@ export default function Dashboard() {
   const [totalMeritGoal, setTotalMeritGoal] = useState(100000);
   const [specialFeatures, setSpecialFeatures] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const quote = "ชีวิตนี้น้อยนัก แต่ชีวิตนี้สำคัญนัก";
+  const [note, setNote] = useState(null);
+
   const progressPercentage = ((meritPoints / totalMeritGoal) * 100).toFixed(2);
-
-
-
-  // const [notifications, setNotifications] = useState([
-  //   {
-  //     id: 1,
-  //     title: "คุณมีภารกิจพิเศษที่ยังไม่เสร็จ!",
-  //     time: "3 ชั่วโมงที่แล้ว",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "กิจกรรม: ฟังธรรมประจำวันเสร็จสมบูรณ์",
-  //     time: "เมื่อวานนี้",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "ขอเชิญร่วมกิจกรรมทำบุญวันพระที่วัดใกล้บ้าน",
-  //     time: "2 วันที่แล้ว",
-  //   },
-  // ]);
 
     // LIFF initialization in useEffect
     useEffect(() => {
@@ -91,6 +72,7 @@ export default function Dashboard() {
           setAvatar(profile.pictureUrl || "https://i.pravatar.cc/150");
           setStatusMessage(profile.statusMessage);
           setActivities(activities || []);
+          setNote(user.Note);
           } else {
             liff.login();
           }
@@ -223,7 +205,7 @@ export default function Dashboard() {
 
   <p className="mt-4 text-sm md:text-base flex items-center gap-2 italic">
     <FaQuoteLeft className="text-xl text-gray-300" />
-    {quote}
+    {note}
     <FaQuoteRight className="text-xl text-gray-300" />
   </p>
 </section>
